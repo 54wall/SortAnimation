@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="algorithm">
+        <item>冒泡</item>
+        <item>插入</item>
+        <item>选择</item>
+        <item>快速</item>
+        <item>归并</item>
+        <item>希尔</item>
+    </string-array>
+</resources>
