@@ -22,7 +22,7 @@
             android:digits="0123456789,"
             android:maxLength="25"
             android:maxLines="1"
-            android:text="4,3,2,1,5,6,8,7" />
+            android:text="4,3,2,1,5" />
 
         <Spinner
             android:id="@+id/spinner_algorithm"

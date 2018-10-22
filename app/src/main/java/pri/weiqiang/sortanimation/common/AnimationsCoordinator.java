@@ -38,7 +38,7 @@ public class AnimationsCoordinator implements AlgorithmStepsInterface {
 
             //BLINKING
             blinkAnimation = ValueAnimator.ofInt(0, 5);
-            blinkAnimation.setDuration(5000);
+            blinkAnimation.setDuration(3000);
             blinkAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
@@ -69,8 +69,6 @@ public class AnimationsCoordinator implements AlgorithmStepsInterface {
                     bubblesContainer.addView(curBubbleView, nextPosition);
                     bubblesContainer.removeView(nextBubbleView);
                     bubblesContainer.addView(nextBubbleView, curPosition);
-
-
                     notifySwapStepAnimationEnd(curPosition);
                 }
             });
@@ -88,7 +86,7 @@ public class AnimationsCoordinator implements AlgorithmStepsInterface {
 
             //BLINKING
             blinkAnimation = ValueAnimator.ofInt(0, 7);
-            blinkAnimation.setDuration(2000);
+            blinkAnimation.setDuration(1000);
             blinkAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {

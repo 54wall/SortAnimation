@@ -123,8 +123,8 @@ public class SortArrayList {
     // 插入排序 https://blog.csdn.net/csdn_aiyang/article/details/73108606
 //    private static void InsertSort(int[] a) {
     public static void insertSort(ArrayList<Integer> unsortedValues, ArrayList<AnimationScenarioItem> animationioList) {
-        System.out.println("插入排序");
-        long t1 = System.nanoTime();
+        Log.e(TAG, "插入排序!");
+        StringBuffer stringBuffer;
         boolean isLastInLoop = false;
         // 直接插入排序
         for (int i = 1; i < unsortedValues.size(); i++) {
@@ -132,30 +132,46 @@ public class SortArrayList {
             int temp = unsortedValues.get(i);
             int j;
             for (j = i - 1; j >= 0; j--) {
-
                 if (j == 0) {
                     isLastInLoop = true;
                 } else {
                     isLastInLoop = false;
                 }
-
                 // 将大于temp的往后移动一位
                 if (unsortedValues.get(j) > temp) {
-//                    a[j + 1] = a[j];
                     unsortedValues.set(j+1,unsortedValues.get(j));
                     animationioList.add(new AnimationScenarioItem(true, j, j+1, isLastInLoop));
+                    stringBuffer= new StringBuffer();
+                    for (int q = 0; q < unsortedValues.size(); q++) {
+                        stringBuffer.append(unsortedValues.get(q)+",");
+                    }
+                    Log.e(TAG,"151 排序后:"+stringBuffer);
                 } else {
                     animationioList.add(new AnimationScenarioItem(false, j, j, isLastInLoop));
+                    stringBuffer= new StringBuffer();
+                    for (int q = 0; q < unsortedValues.size(); q++) {
+                        stringBuffer.append(unsortedValues.get(q)+",");
+                    }
+                    Log.e(TAG,"158 排序后:"+stringBuffer);
                     break;
+
                 }
             }
-//            a[j + 1] = temp;// 插入进来
-            unsortedValues.set(j+1,temp);// 插入进来
-            animationioList.add(new AnimationScenarioItem(true, j, j+1, isLastInLoop));
+                unsortedValues.set(j + 1, temp);// 插入进来
+                Log.e(TAG, "168 AnimationScenarioItem j:" + j);
+                animationioList.add(new AnimationScenarioItem(true, j+1, j + 1, isLastInLoop));//务必全部是j+1,因为j最后为-1,
+                stringBuffer= new StringBuffer();
+                for (int q = 0; q < unsortedValues.size(); q++) {
+                stringBuffer.append(unsortedValues.get(q)+",");
+                 }
+                Log.e(TAG,"174 排序后:"+stringBuffer);
+//            }
         }
+        stringBuffer= new StringBuffer();
         for (int q = 0; q < unsortedValues.size(); q++) {
-            Log.e(TAG, "insertSort:" + unsortedValues.get(q));
+            stringBuffer.append(unsortedValues.get(q)+",");
         }
+        Log.e(TAG,"Last 排序后:"+stringBuffer);
     }
 
     // 堆排序代码实现 https://www.cnblogs.com/Java3y/p/8639937.html

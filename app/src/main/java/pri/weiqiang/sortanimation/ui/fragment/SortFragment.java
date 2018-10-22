@@ -147,7 +147,7 @@ public class SortFragment extends Fragment {
         mLlContainer = view.findViewById(R.id.ll_container);
         mWidth = view.getMeasuredWidth();
         mRectHeight = view.getMeasuredHeight();
-        Log.e(TAG, "ll_container mWidth:" + mWidth + ",mRectHeight:" + mRectHeight);
+//        Log.e(TAG, "ll_container mWidth:" + mWidth + ",mRectHeight:" + mRectHeight);
         animationsCoordinator = new AnimationsCoordinator(mLlContainer);
         animationsCoordinator.addListener(new AlgorithmAnimationListener() {
             @Override
@@ -167,7 +167,9 @@ public class SortFragment extends Fragment {
             return;
         }
         if (animationioList != null && !animationioList.isEmpty() && animationioList.size() > scenarioItemIndex) {
+
             AnimationScenarioItem animationStep = animationioList.get(scenarioItemIndex);
+//            Log.e(TAG,"scenarioItemIndex:"+scenarioItemIndex+"animationStep.getCurPosition():"+animationStep.getCurPosition()+",animationStep.getNextPosition():"+animationStep.getNextPosition());
             scenarioItemIndex++;
             if (animationStep.isShouldBeSwapped()) {
                 animationsCoordinator.showSwapStep(animationStep.getCurPosition(), animationStep.getNextPosition(), animationStep.isFinalPlace());
@@ -217,15 +219,15 @@ public class SortFragment extends Fragment {
      * @return empty bitmap with calculated size
      */
     private Bitmap createCalculatedBitmap(Integer currentIntValue) {
-        Log.e(TAG, "createCalculatedBitmap");
+//        Log.e(TAG, "createCalculatedBitmap");
         mWidth = view.getMeasuredWidth();
         mRectHeight = view.getMeasuredHeight() * currentIntValue / 10;
-        Log.e(TAG, "ll_container mWidth:" + mWidth + ",mRectHeight:" + mRectHeight);
+//        Log.e(TAG, "ll_container mWidth:" + mWidth + ",mRectHeight:" + mRectHeight);
         final Rect bounds = new Rect();
         Paint paint = new Paint(Paint.LINEAR_TEXT_FLAG);
         paint.setTextSize(BubbleView.TEXT_SIZE);
         paint.getTextBounds(currentIntValue.toString(), 0, currentIntValue.toString().length(), bounds);
-        Log.e(TAG, "bounds:height " + bounds.height() + ",padding:" + PADDING);
+//        Log.e(TAG, "bounds:height " + bounds.height() + ",padding:" + PADDING);
 //        return Bitmap.createBitmap(bounds.width() + PADDING, bounds.height() + PADDING, Bitmap.Config.ALPHA_8);
         return Bitmap.createBitmap(mWidth / 10, mRectHeight, Bitmap.Config.ALPHA_8);
     }

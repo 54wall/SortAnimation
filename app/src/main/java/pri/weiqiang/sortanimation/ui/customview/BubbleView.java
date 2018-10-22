@@ -67,7 +67,7 @@ public class BubbleView extends AppCompatImageView {
         mWidth = getMeasuredWidth();
         mRectHeight = getMeasuredHeight();
         mRectWidth = mWidth / mCount;
-        Log.e(TAG, "onSizeChanged mWidth:" + mWidth + ",mRectWidth:" + mRectWidth);
+//        Log.e(TAG, "onSizeChanged mWidth:" + mWidth + ",mRectWidth:" + mRectWidth);
     }
 
     @Override
