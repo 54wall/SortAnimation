@@ -13,17 +13,17 @@ public class SortArrayList {
     static int[] a5 = {22, 3, 2, 1, 0, 5, 4};
     static int[] a4 = {22, 3, 2, 1, 0, 5, 4};
     static int[] a3 = {22, 3, 2, 1, 0, 5, 4};
-    static int[] a = {2, 3, 6, 11};
+//    static int[] a = {2, 3, 6, 11};
     static int[] b = {1, 4, 8, 9};
-    static int[] c = new int[a.length + b.length];
+//    static int[] c = new int[a.length + b.length];
     static int[] a1 = {2, 3, 6, 11, 2, 3, 4};
-    static int[] a6 = {5, 4, 3, 1, 0, 2, 6};
+//    static int[] a6 = {5, 4, 3, 1, 0, 2, 6};
     private static String TAG = SortArrayList.class.getSimpleName();
 
     // 直接在Debug下查看数组变化，特别容易理解
     public static void main(String[] args) {
 
-        quickSort(a6, 0, a6.length - 1);
+//        quickSort(a6, 0, a6.length - 1);
 //		memeryArray(a, a.length, b, b.length, c);
 //		sort(a1, 0, a1.length-1);
 //		selectSort(a3);
@@ -209,51 +209,55 @@ public class SortArrayList {
     }
 
     // 快速排序
-    public static void quickSort(int[] a, int low, int high) {
+    public static void quickSort(ArrayList<Integer> unsortedValues,int low,int high, ArrayList<AnimationScenarioItem> animationioList) {
+
         int start = low;
         int end = high;
-        int key = a[low];
-
+        int key = unsortedValues.get(start);
+        boolean isLastInLoop = false;
         while (end > start) {
 
             // 从后往前比较// 如果没有比关键值小的，比较下一个，直到有比关键值小的交换位置，然后又从前往后比较
-            while (end > start && a[end] >= key)
+            while (end > start && unsortedValues.get(end) >= key) {
                 end--;
-            if (a[end] <= key) {
-                int temp = a[end];
-                a[end] = a[start];
-                a[start] = temp;
-                System.out.println("key:" + key + ",从后往前比较 end:" + end + ",a[end]:" + a[end] + ",start:" + start + ",a[start]:" + a[start]);
-                System.out.println("---start:" + start);
+                animationioList.add(new AnimationScenarioItem(false, end, end, isLastInLoop));
+            }
+            if (unsortedValues.get(end) <= key) {
+                int temp = unsortedValues.get(end);
+                unsortedValues.set(end,unsortedValues.get(start));
+                unsortedValues.set(start,temp);
+                animationioList.add(new AnimationScenarioItem(true, end, start, isLastInLoop));
+                Log.e(TAG,"key:" + key + ",从后往前比较 end:" + end + ",unsortedValues.get(end):" + unsortedValues.get(end) +
+                        ",start:" + start + ",unsortedValues.get(start):" + unsortedValues.get(start));
+                Log.e(TAG,"---start:" + start);
             }
             // 从前往后比较// 如果没有比关键值大的，比较下一个，直到有比关键值大的交换位置
-            while (end > start && a[start] <= key)
+            while (end > start && unsortedValues.get(start) <= key) {
                 start++;
-            if (a[start] >= key) {
-                int temp = a[start];
-                a[start] = a[end];
-                a[end] = temp;
-                System.out.println("key:" + key + ",从前往后比较 end:" + end + ",a[end]:" + a[end] + ",start:" + start + ",a[start]:" + a[start]);
-                System.out.println("---end:" + end);
+                animationioList.add(new AnimationScenarioItem(false, start, start, isLastInLoop));
+            }
+            if (unsortedValues.get(start) >= key) {
+                int temp = unsortedValues.get(start);
+                unsortedValues.set(start,unsortedValues.get(end));
+                unsortedValues.set(end,temp);
+                animationioList.add(new AnimationScenarioItem(true, start, end, isLastInLoop));
+                Log.e(TAG,"key:" + key + ",从前往后比较 end:" + end + ",unsortedValues.get(end):" + unsortedValues.get(end) + ",start:"
+                        + start + ",unsortedValues.get(start):" + unsortedValues.get(start));
+                Log.e(TAG,"---end:" + end);
             }
             // 此时第一次循环比较结束，关键值的位置已经确定了。左边的值都比关键值小，右边的值都比关键值大，但是两边的顺序还有可能是不一样的，进行下面的递归调用
         }
-        StringBuilder sb = new StringBuilder("a6 =");
-        for (int i = 0; i < a6.length; i++) {
-            sb.append(a6[i] + ",");
 
-        }
-        System.out.println("sb:" + sb.toString());
         // 递归
         if (start > low) {
-            System.out.println("**************************************************");
-            System.out.println("迭代******start > low!" + ",start:" + start + ",low:" + low);
-            quickSort(a, low, start - 1);// 左边序列。第一个索引位置到关键值索引-1
+            Log.e(TAG,"**************************************************");
+            Log.e(TAG,"迭代******start > low!" + ",start:" + start + ",low:" + low);
+            quickSort(unsortedValues, low, start - 1,animationioList);// 左边序列。第一个索引位置到关键值索引-1
         }
         if (end < high) {
-            System.out.println("**************************************************");
-            System.out.println("迭代*******end < high!" + ",end:" + end + ",high:" + high);
-            quickSort(a, end + 1, high);// 右边序列。从关键值索引+1到最后一个
+            Log.e(TAG,"**************************************************");
+            Log.e(TAG,"迭代*******end < high!" + ",end:" + end + ",high:" + high);
+            quickSort(unsortedValues, end + 1, high,animationioList);// 右边序列。从关键值索引+1到最后一个
         }
     }
 

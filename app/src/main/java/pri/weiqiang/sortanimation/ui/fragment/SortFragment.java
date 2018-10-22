@@ -49,6 +49,7 @@ public class SortFragment extends Fragment {
     private int mWidth;
     private int mRectHeight;
     private View view;
+    private StringBuffer stringBuffer;
     View.OnClickListener buttonClickListener = new View.OnClickListener() {
 
         @Override
@@ -83,7 +84,7 @@ public class SortFragment extends Fragment {
                 SortArrayList.selectSort(unsortedValues, animationioList);
                 break;
             case Constant.ALGORITHM_QUICK:
-
+                SortArrayList.quickSort(unsortedValues, 0,unsortedValues.size()-1,animationioList);
                 break;
             case Constant.ALGORITHM_MERGE:
 
@@ -92,6 +93,11 @@ public class SortFragment extends Fragment {
 
                 break;
         }
+        stringBuffer= new StringBuffer();
+        for (int q = 0; q < unsortedValues.size(); q++) {
+            stringBuffer.append(unsortedValues.get(q)+",");
+        }
+        Log.e(TAG,"Last 排序后:"+stringBuffer);
     }
 
     private void resetPreviousData() {
@@ -143,7 +149,7 @@ public class SortFragment extends Fragment {
 
             }
         });
-        algorithmSpinner.setSelection(1, true);
+        algorithmSpinner.setSelection(3, true);
         mLlContainer = view.findViewById(R.id.ll_container);
         mWidth = view.getMeasuredWidth();
         mRectHeight = view.getMeasuredHeight();
@@ -221,7 +227,7 @@ public class SortFragment extends Fragment {
     private Bitmap createCalculatedBitmap(Integer currentIntValue) {
 //        Log.e(TAG, "createCalculatedBitmap");
         mWidth = view.getMeasuredWidth();
-        mRectHeight = view.getMeasuredHeight() * currentIntValue / 10;
+        mRectHeight = view.getMeasuredHeight() * currentIntValue / 10+10;
 //        Log.e(TAG, "ll_container mWidth:" + mWidth + ",mRectHeight:" + mRectHeight);
         final Rect bounds = new Rect();
         Paint paint = new Paint(Paint.LINEAR_TEXT_FLAG);
