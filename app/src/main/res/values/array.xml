@@ -7,5 +7,6 @@
         <item>快速</item>
         <item>归并</item>
         <item>希尔</item>
+        <item>堆</item>
     </string-array>
 </resources>

@@ -87,11 +87,15 @@ public class SortFragment extends Fragment {
                 SortArrayList.quickSort(unsortedValues, 0,unsortedValues.size()-1,animationioList);
                 break;
             case Constant.ALGORITHM_MERGE:
-
+                SortArrayList.mergeSort(unsortedValues, 0,unsortedValues.size()-1,animationioList);
                 break;
             case Constant.ALGORITHM_HEER:
-
+                SortArrayList.heerSort(unsortedValues,animationioList);
                 break;
+            case Constant.ALGORITHM_HEAP:
+                SortArrayList.heapSort(unsortedValues, unsortedValues.size(),animationioList);
+                break;
+
         }
         stringBuffer= new StringBuffer();
         for (int q = 0; q < unsortedValues.size(); q++) {
@@ -140,6 +144,9 @@ public class SortFragment extends Fragment {
                     case Constant.ALGORITHM_HEER:
                         algorithmSelected = Constant.ALGORITHM_HEER;
                         break;
+                    case Constant.ALGORITHM_HEAP:
+                        algorithmSelected = Constant.ALGORITHM_HEAP;
+                        break;
                 }
 
             }
@@ -149,7 +156,7 @@ public class SortFragment extends Fragment {
 
             }
         });
-        algorithmSpinner.setSelection(3, true);
+        algorithmSpinner.setSelection(4, true);
         mLlContainer = view.findViewById(R.id.ll_container);
         mWidth = view.getMeasuredWidth();
         mRectHeight = view.getMeasuredHeight();
