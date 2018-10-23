@@ -156,7 +156,7 @@ public class SortFragment extends Fragment {
 
             }
         });
-        algorithmSpinner.setSelection(4, true);
+        algorithmSpinner.setSelection(6, true);
         mLlContainer = view.findViewById(R.id.ll_container);
         mWidth = view.getMeasuredWidth();
         mRectHeight = view.getMeasuredHeight();
