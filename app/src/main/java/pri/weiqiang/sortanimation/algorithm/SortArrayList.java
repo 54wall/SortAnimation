@@ -47,10 +47,10 @@ public class SortArrayList {
             for (int j = 0; j < size - i - 1; j++) {// 索引不同的两层for循环
                 if (j == unsortedValues.size() - i - 2) {
                     isLastInLoop = true;
-                    Log.e(TAG, "j:" + j + " ,Sort isLastInLoop:" + isLastInLoop);
+//                    Log.e(TAG, "j:" + j + " ,Sort isLastInLoop:" + isLastInLoop);
                 } else {
                     isLastInLoop = false;
-                    Log.e(TAG, "j:" + j + " ,Sort isLastInLoop:" + isLastInLoop);
+//                    Log.e(TAG, "j:" + j + " ,Sort isLastInLoop:" + isLastInLoop);
                 }
                 if (unsortedValues.get(j + 1) < unsortedValues.get(j)) {// 交互数据从大到小排列顺序 大的放前面
                     temp = unsortedValues.get(j);
@@ -185,12 +185,10 @@ public class SortArrayList {
 
         // 递归
         if (start > low) {
-            Log.e(TAG, "**************************************************");
             Log.e(TAG, "迭代******start > low!" + ",start:" + start + ",low:" + low);
             quickSort(unsortedValues, low, start - 1, animationioList);// 左边序列。第一个索引位置到关键值索引-1
         }
         if (end < high) {
-            Log.e(TAG, "**************************************************");
             Log.e(TAG, "迭代*******end < high!" + ",end:" + end + ",high:" + high);
             quickSort(unsortedValues, end + 1, high, animationioList);// 右边序列。从关键值索引+1到最后一个
         }

@@ -20,9 +20,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="3"
             android:digits="0123456789,"
-            android:maxLength="25"
-            android:maxLines="1"
-            android:text="4,1,6,2,9,5,6,9,5" />
+            android:maxLines="3"
+            android:text="4,1,6,2,9,5" />
 
         <Spinner
             android:id="@+id/spinner_algorithm"

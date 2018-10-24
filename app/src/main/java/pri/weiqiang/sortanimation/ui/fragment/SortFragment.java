@@ -26,7 +26,7 @@ import pri.weiqiang.sortanimation.common.AlgorithmAnimationListener;
 import pri.weiqiang.sortanimation.common.AnimationScenarioItem;
 import pri.weiqiang.sortanimation.common.AnimationsCoordinator;
 import pri.weiqiang.sortanimation.constant.Constant;
-import pri.weiqiang.sortanimation.ui.customview.BubbleView;
+import pri.weiqiang.sortanimation.ui.customview.RectView;
 import pri.weiqiang.sortanimation.util.Util;
 
 /**
@@ -35,7 +35,7 @@ import pri.weiqiang.sortanimation.util.Util;
 
 public class SortFragment extends Fragment {
     public static final int PADDING = 50;
-    public static final int BUBBLE_MARGIN = 4;
+    public static final int RECT_MARGIN = 1;//4
     private String TAG = SortFragment.class.getSimpleName();
     private EditText mEtInput;
     private Button mBtnStart;
@@ -48,8 +48,12 @@ public class SortFragment extends Fragment {
     private int algorithmSelected = Constant.ALGORITHM_PUBBLE;
     private int mWidth;
     private int mRectHeight;
+    private int maxRectHeight;
+    private int minRectHeight;
     private View view;
     private StringBuffer stringBuffer;
+    private int rectCount = 0;
+
     View.OnClickListener buttonClickListener = new View.OnClickListener() {
 
         @Override
@@ -59,11 +63,9 @@ public class SortFragment extends Fragment {
                 resetPreviousData();
                 animationioList = new ArrayList<>();
                 ArrayList<Integer> integerArrayList = new ArrayList<>(convertToIntArray(inputUserArray));
+                rectCount = integerArrayList.size();
                 drawBubbles(integerArrayList);
-//                generateSortScenario(integerArrayList);
-//                SortArrayList.pubbleSort(integerArrayList,animationioList);
                 sort(integerArrayList, animationioList);
-//                Log.e(TAG, "runAnimationIteration onClick");
                 runAnimationIteration();
             } else {
                 Toast.makeText(getContext(), R.string.empty_field_warning, Toast.LENGTH_LONG).show();
@@ -101,11 +103,11 @@ public class SortFragment extends Fragment {
         for (int q = 0; q < unsortedValues.size(); q++) {
             stringBuffer.append(unsortedValues.get(q)+",");
         }
-        Log.e(TAG,"Last 排序后:"+stringBuffer);
+        Log.e(TAG,"排序结束后:"+stringBuffer);
     }
 
     private void resetPreviousData() {
-//        Log.e(TAG, "resetPreviousData");
+        Log.e(TAG, "resetPreviousData");
         if (isAnimationRunning && animationsCoordinator != null) {
             animationsCoordinator.cancelAllVisualisations();
             isAnimationRunning = false;
@@ -115,7 +117,7 @@ public class SortFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-//        Log.e(TAG, "onCreateView");
+        Log.e(TAG, "onCreateView");
         view = inflater.inflate(R.layout.fragment_sort, container, false);
         mEtInput = view.findViewById(R.id.et_input);
         mBtnStart = view.findViewById(R.id.btn_start);
@@ -156,16 +158,15 @@ public class SortFragment extends Fragment {
 
             }
         });
-        algorithmSpinner.setSelection(6, true);
+        algorithmSpinner.setSelection(0, true);
         mLlContainer = view.findViewById(R.id.ll_container);
         mWidth = view.getMeasuredWidth();
         mRectHeight = view.getMeasuredHeight();
-//        Log.e(TAG, "ll_container mWidth:" + mWidth + ",mRectHeight:" + mRectHeight);
         animationsCoordinator = new AnimationsCoordinator(mLlContainer);
         animationsCoordinator.addListener(new AlgorithmAnimationListener() {
             @Override
             public void onSwapStepAnimationEnd(int endedPosition) {
-//                Log.e(TAG, "addListener AlgorithmAnimationListener:runAnimationIteration!!!!");
+                Log.e(TAG, "addListener AlgorithmAnimationListener:runAnimationIteration!!!!");
                 runAnimationIteration();
             }
         });
@@ -173,7 +174,7 @@ public class SortFragment extends Fragment {
     }
 
     private void runAnimationIteration() {
-//        Log.e(TAG, "runAnimationIteration");
+        Log.e(TAG, "runAnimationIteration");
         isAnimationRunning = true;
         if (animationioList != null && animationioList.size() == scenarioItemIndex) {
             animationsCoordinator.showFinish();
@@ -193,33 +194,25 @@ public class SortFragment extends Fragment {
 
     }
 
-    private void swap(final ArrayList<Integer> list, final int inner) {
-//        Log.e(TAG, "swap");
-        int temp = list.get(inner);
-        list.set(inner, list.get(inner + 1));
-        list.set(inner + 1, temp);
-    }
-
     private void drawBubbles(ArrayList<Integer> listToDraw) {
-//        Log.e(TAG, "drawBubbles");
+        Log.e(TAG, "drawBubbles");
         if (mLlContainer != null) {
             mLlContainer.removeAllViews();
             mLlContainer.clearAnimation();
         }
 
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        int marginInPx = Util.dpToPx(getContext(), BUBBLE_MARGIN);
+        int marginInPx = Util.dpToPx(getContext(), RECT_MARGIN);
         lp.setMargins(0, 0, marginInPx, 0);
-
         int pos = 0;
         for (Integer currentIntValue : listToDraw) {
-            BubbleView bubbleView = new BubbleView(getContext());
-            bubbleView.setImageBitmap(createCalculatedBitmap(currentIntValue));
-            bubbleView.setMinimumHeight(250);
-            bubbleView.setNumber(currentIntValue);
-            bubbleView.setId(pos);
+            RectView rectView = new RectView(getContext());
+            rectView.setImageBitmap(createCalculatedBitmap(currentIntValue));
+            rectView.setMinimumHeight(250);
+            rectView.setNumber(currentIntValue);
+            rectView.setId(pos);
             if (mLlContainer != null) {
-                mLlContainer.addView(bubbleView, lp);
+                mLlContainer.addView(rectView, lp);
             }
             pos++;
         }
@@ -232,54 +225,38 @@ public class SortFragment extends Fragment {
      * @return empty bitmap with calculated size
      */
     private Bitmap createCalculatedBitmap(Integer currentIntValue) {
-//        Log.e(TAG, "createCalculatedBitmap");
+        Log.e(TAG, "createCalculatedBitmap");
         mWidth = view.getMeasuredWidth();
-        mRectHeight = view.getMeasuredHeight() * currentIntValue / 10+10;
-//        Log.e(TAG, "ll_container mWidth:" + mWidth + ",mRectHeight:" + mRectHeight);
+        mRectHeight = view.getMeasuredHeight() * currentIntValue / (maxRectHeight-minRectHeight)+1;
         final Rect bounds = new Rect();
         Paint paint = new Paint(Paint.LINEAR_TEXT_FLAG);
-        paint.setTextSize(BubbleView.TEXT_SIZE);
+        paint.setTextSize(RectView.TEXT_SIZE);
         paint.getTextBounds(currentIntValue.toString(), 0, currentIntValue.toString().length(), bounds);
-//        Log.e(TAG, "bounds:height " + bounds.height() + ",padding:" + PADDING);
+        Log.e(TAG, "bounds:height " + bounds.height() + ",padding:" + PADDING);
 //        return Bitmap.createBitmap(bounds.width() + PADDING, bounds.height() + PADDING, Bitmap.Config.ALPHA_8);
-        return Bitmap.createBitmap(mWidth / 10, mRectHeight, Bitmap.Config.ALPHA_8);
+        return Bitmap.createBitmap(mWidth / (rectCount+1)/*-RECT_MARGIN*/, mRectHeight, Bitmap.Config.ALPHA_8);
     }
 
     private ArrayList convertToIntArray(String inputUserArray) {
-//        Log.e(TAG, "convertToIntArray");
         ArrayList<Integer> parsedUserArray = new ArrayList<>();
         String[] stringArray = inputUserArray.split(",");
         int numberOfElements = stringArray.length;
+        minRectHeight = Integer.parseInt(stringArray[0]);
+        maxRectHeight = Integer.parseInt(stringArray[0]);
         for (int i = 0; i < numberOfElements; i++) {
             if (!TextUtils.isEmpty(stringArray[i])) {
-                parsedUserArray.add(Integer.parseInt(stringArray[i]));
+                int hegiht = Integer.parseInt(stringArray[i]);
+                if (hegiht > maxRectHeight){
+                    maxRectHeight = hegiht;
+                }
+                if (hegiht < minRectHeight){
+                    minRectHeight = hegiht;
+                }
+                parsedUserArray.add(hegiht);
             }
         }
         return parsedUserArray;
 
-    }
-
-    private void generateSortScenario(ArrayList<Integer> unsortedValues) {
-//        Log.e(TAG, "Start generateSortScenario");
-        boolean isLastInLoop;
-        for (int i = 0; i < unsortedValues.size() - 1; i++) {
-            Log.e(TAG, "Sort i:" + i);
-            for (int j = 0; j < unsortedValues.size() - i - 1; j++) {
-                if (j == unsortedValues.size() - i - 2) {
-                    isLastInLoop = true;
-                    Log.e(TAG, "j:" + j + " ,Sort isLastInLoop:" + isLastInLoop);
-                } else {
-                    isLastInLoop = false;
-                    Log.e(TAG, "j:" + j + " ,Sort isLastInLoop:" + isLastInLoop);
-                }
-                if (unsortedValues.get(j) > unsortedValues.get(j + 1)) {
-                    swap(unsortedValues, j);
-                    animationioList.add(new AnimationScenarioItem(true, j, j + 1, isLastInLoop));
-                } else {
-                    animationioList.add(new AnimationScenarioItem(false, j, j, isLastInLoop));
-                }
-            }
-        }
     }
 
 }
