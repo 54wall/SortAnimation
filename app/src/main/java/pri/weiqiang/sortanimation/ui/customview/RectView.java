@@ -89,7 +89,7 @@ public class RectView extends AppCompatImageView {
 //            canvas.drawRect(0, /*TOP_POS+*/valueToDraw, bounds.width() + PADDING, BOTTOM_POS, paint);
 //            canvas.drawOval(0, TOP_POS, bounds.width() + PADDING, BOTTOM_POS, paint);//绘制圆形
             paint.setColor(Color.WHITE);
-//            paint.setTextAlign(Paint.Align.CENTER);//以文字中间位置为坐标
+            paint.setTextAlign(Paint.Align.CENTER);//以文字中间位置为坐标
 //            canvas.drawText(text, START_X_POS, TEXT_BASELINE_Y, paint);
             canvas.drawText(text, mRectWidth/2, TEXT_BASELINE_Y, paint);
         }
