@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
 
+def releaseTime() {
+    return new Date().format("yyyyMMdd_hhmmss", TimeZone.getTimeZone("GMT+8"))
+}
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -8,20 +12,76 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
+        flavorDimensions "versionCode"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+    //签名配置
+    signingConfigs {
+        debug {
+            keyAlias "android"
+            keyPassword "android"
+            storeFile file("D:/IDE/MyKeystore/54wallKeystore.jks")
+            storePassword "android"
         }
+        release {
+            keyAlias "android"
+            keyPassword "android"
+            storeFile file("D:/IDE/MyKeystore/54wallKeystore.jks")
+            storePassword "android"
+        }
+    }
+
+    buildTypes {
+
+        debug {
+            // 显示Log
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+            //混淆
+            minifyEnabled true
+            //Zipalign优化
+            zipAlignEnabled true
+            // 移除无用的resource文件
+            shrinkResources true
+            //加载默认混淆配置文件
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //签名
+            signingConfig signingConfigs.debug
+        }
+        release {
+            // 不显示Log
+            buildConfigField "boolean", "LOG_DEBUG", "false"
+            //混淆
+            minifyEnabled true
+            //Zipalign优化
+            zipAlignEnabled true
+            // 移除无用的resource文件
+            shrinkResources true
+            //加载默认混淆配置文件
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //签名
+            signingConfig signingConfigs.release
+        }
+
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "${releaseTime()}_Sort_${defaultConfig.versionName}_${variant.productFlavors[0].name}.apk"
+        }
+    }
+
+    productFlavors {
+
+        baidu {}
+        productFlavors.all { flavor ->
+            flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
+        }
+
     }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:28.0.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }

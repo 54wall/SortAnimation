@@ -11,7 +11,6 @@ public class SortArrayList {
 
     private static String TAG = SortArrayList.class.getSimpleName();
 
-    // 希尔排序 https://blog.csdn.net/csdn_aiyang/article/details/73108606
     private static void binarySearch(int[] a) {
 
         System.out.println("二分法查找");
