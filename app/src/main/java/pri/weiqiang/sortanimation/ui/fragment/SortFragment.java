@@ -158,7 +158,7 @@ public class SortFragment extends Fragment {
 
             }
         });
-        algorithmSpinner.setSelection(0, true);
+        algorithmSpinner.setSelection(1, true);
         mLlContainer = view.findViewById(R.id.ll_container);
         mWidth = view.getMeasuredWidth();
         mRectHeight = view.getMeasuredHeight();
@@ -166,7 +166,7 @@ public class SortFragment extends Fragment {
         animationsCoordinator.addListener(new AlgorithmAnimationListener() {
             @Override
             public void onSwapStepAnimationEnd(int endedPosition) {
-                Log.e(TAG, "addListener AlgorithmAnimationListener:runAnimationIteration!!!!");
+//                Log.e(TAG, "addListener AlgorithmAnimationListener:runAnimationIteration!!!!");
                 runAnimationIteration();
             }
         });
@@ -174,7 +174,7 @@ public class SortFragment extends Fragment {
     }
 
     private void runAnimationIteration() {
-        Log.e(TAG, "runAnimationIteration");
+//        Log.e(TAG, "runAnimationIteration");
         isAnimationRunning = true;
         if (animationioList != null && animationioList.size() == scenarioItemIndex) {
             animationsCoordinator.showFinish();
@@ -208,7 +208,7 @@ public class SortFragment extends Fragment {
         for (Integer currentIntValue : listToDraw) {
             RectView rectView = new RectView(getContext());
             rectView.setImageBitmap(createCalculatedBitmap(currentIntValue));
-            rectView.setMinimumHeight(250);
+            rectView.setMinimumHeight(20);//250
             rectView.setNumber(currentIntValue);
             rectView.setId(pos);
             if (mLlContainer != null) {
@@ -225,16 +225,16 @@ public class SortFragment extends Fragment {
      * @return empty bitmap with calculated size
      */
     private Bitmap createCalculatedBitmap(Integer currentIntValue) {
-        Log.e(TAG, "createCalculatedBitmap");
+//        Log.e(TAG, "createCalculatedBitmap");
         mWidth = view.getMeasuredWidth();
-        mRectHeight = view.getMeasuredHeight() * currentIntValue / (maxRectHeight-minRectHeight)+1;
+        //maxRectHeight-minRectHeight+1:+1 是因为计算的是距离，否则最高的矩形还是会超出屏幕
+        mRectHeight = view.getMeasuredHeight() * currentIntValue / (maxRectHeight-minRectHeight+1)+1;
+        Log.e(TAG,"createCalculatedBitmap currentIntValue:"+currentIntValue+",mRectHeight:"+mRectHeight);
         final Rect bounds = new Rect();
         Paint paint = new Paint(Paint.LINEAR_TEXT_FLAG);
         paint.setTextSize(RectView.TEXT_SIZE);
         paint.getTextBounds(currentIntValue.toString(), 0, currentIntValue.toString().length(), bounds);
-        Log.e(TAG, "bounds:height " + bounds.height() + ",padding:" + PADDING);
-//        return Bitmap.createBitmap(bounds.width() + PADDING, bounds.height() + PADDING, Bitmap.Config.ALPHA_8);
-        return Bitmap.createBitmap(mWidth / (rectCount+1)/*-RECT_MARGIN*/, mRectHeight, Bitmap.Config.ALPHA_8);
+        return Bitmap.createBitmap(mWidth / rectCount-RECT_MARGIN, mRectHeight, Bitmap.Config.ALPHA_8);
     }
 
     private ArrayList convertToIntArray(String inputUserArray) {

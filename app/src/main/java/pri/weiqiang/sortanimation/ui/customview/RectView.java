@@ -34,8 +34,6 @@ public class RectView extends AppCompatImageView {
     private int mRectHeight;
     private int mRectWidth;
     private LinearGradient mLinearGradient;
-    private double mRandom;
-    private float mcurrentHeight;
 
     public RectView(Context context) {
         this(context, null);
@@ -65,7 +63,7 @@ public class RectView extends AppCompatImageView {
         mWidth = getMeasuredWidth();
         mRectHeight = getMeasuredHeight();
         mRectWidth = mWidth;
-        Log.e(TAG, "onSizeChanged mWidth:" + mWidth + ",mRectWidth:" + mRectWidth);
+//        Log.e(TAG, "onSizeChanged mWidth:" + mWidth + ",mRectWidth:" + mRectWidth);
     }
 
     @Override
@@ -84,7 +82,7 @@ public class RectView extends AppCompatImageView {
                     paint.setColor(getResources().getColor(R.color.colorAccent));
                 }
             }
-            Log.e(TAG, "!!!!onDraw mcurrentHeight:" + mcurrentHeight + ",mRectWidth:" + mRectWidth + ",mRectHeight:" + mRectHeight);
+//            Log.e(TAG, "!!!!onDraw mcurrentHeight:" + mcurrentHeight + ",mRectWidth:" + mRectWidth + ",mRectHeight:" + mRectHeight);
             canvas.drawRect(0, 5, mRectWidth, mRectHeight, paint);
 //            canvas.drawRect(0, /*TOP_POS+*/valueToDraw, bounds.width() + PADDING, BOTTOM_POS, paint);
 //            canvas.drawOval(0, TOP_POS, bounds.width() + PADDING, BOTTOM_POS, paint);//绘制圆形

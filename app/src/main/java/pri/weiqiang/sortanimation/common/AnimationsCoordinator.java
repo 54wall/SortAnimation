@@ -38,7 +38,7 @@ public class AnimationsCoordinator implements AlgorithmStepsInterface {
 
             //BLINKING
             blinkAnimation = ValueAnimator.ofInt(0, 5);
-            blinkAnimation.setDuration(3000);
+            blinkAnimation.setDuration(2000);
             blinkAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
@@ -85,8 +85,8 @@ public class AnimationsCoordinator implements AlgorithmStepsInterface {
             final RectView nextRectView = (RectView) bubblesContainer.getChildAt(nextPosition);
 
             //BLINKING
-            blinkAnimation = ValueAnimator.ofInt(0, 7);
-            blinkAnimation.setDuration(1000);
+            blinkAnimation = ValueAnimator.ofInt(0, 6);
+            blinkAnimation.setDuration(1500);
             blinkAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
@@ -120,7 +120,10 @@ public class AnimationsCoordinator implements AlgorithmStepsInterface {
     public void showFinish() {
 //        Log.e(TAG, "showFinish");
         if (bubblesContainer != null && bubblesContainer.getChildCount() > 0) {
-            ((RectView) bubblesContainer.getChildAt(0)).setBubbleIsOnFinalPlace(true);
+//            ((RectView) bubblesContainer.getChildAt(0)).setBubbleIsOnFinalPlace(true);//仅对冒泡法适用
+            for(int i =0;i<bubblesContainer.getChildCount();i++){
+                ((RectView) bubblesContainer.getChildAt(i)).setBubbleIsOnFinalPlace(true);//排序完成后，全部设置为最终颜色
+            }
         }
         Toast.makeText(bubblesContainer.getContext(), R.string.sort_finish, Toast.LENGTH_SHORT).show();
     }

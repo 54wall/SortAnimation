@@ -41,23 +41,21 @@ public class SortArrayList {
         Log.e(TAG, "冒泡排序");
         Integer temp;// 记录临时变量
         boolean isLastInLoop;
-        int size = unsortedValues.size();// 数组大小
+        int size = unsortedValues.size();
         for (int i = 0; i < size - 1; i++) {
-            for (int j = 0; j < size - i - 1; j++) {// 索引不同的两层for循环
+            for (int j = 0; j < size - i - 1; j++) {
                 if (j == unsortedValues.size() - i - 2) {
                     isLastInLoop = true;
-//                    Log.e(TAG, "j:" + j + " ,Sort isLastInLoop:" + isLastInLoop);
                 } else {
                     isLastInLoop = false;
-//                    Log.e(TAG, "j:" + j + " ,Sort isLastInLoop:" + isLastInLoop);
                 }
-                if (unsortedValues.get(j + 1) < unsortedValues.get(j)) {// 交互数据从大到小排列顺序 大的放前面
+                if (unsortedValues.get(j + 1) < unsortedValues.get(j)) {
                     temp = unsortedValues.get(j);
                     unsortedValues.set(j, unsortedValues.get(j + 1));
                     unsortedValues.set(j + 1, temp);
                     animationioList.add(new AnimationScenarioItem(true, j, j + 1, isLastInLoop));
                 } else {
-                    animationioList.add(new AnimationScenarioItem(false, j, j, isLastInLoop));
+                    animationioList.add(new AnimationScenarioItem(false, j, j+1, isLastInLoop));
                 }
             }
         }
@@ -68,18 +66,13 @@ public class SortArrayList {
     public static void insertSort(ArrayList<Integer> unsortedValues, ArrayList<AnimationScenarioItem> animationioList) {
         Log.e(TAG, "插入排序!");
         StringBuffer stringBuffer;
-        boolean isLastInLoop = false;
+        boolean isLastInLoop = false;//插入排序，直到最后排序完成后，才会得知是最后位置
         // 直接插入排序
         for (int i = 1; i < unsortedValues.size(); i++) {
             // 待插入元素
             int temp = unsortedValues.get(i);
             int j;
             for (j = i - 1; j >= 0; j--) {
-                if (j == 0) {
-                    isLastInLoop = true;
-                } else {
-                    isLastInLoop = false;
-                }
                 // 将大于temp的往后移动一位
                 if (unsortedValues.get(j) > temp) {
                     unsortedValues.set(j + 1, unsortedValues.get(j));
@@ -88,27 +81,21 @@ public class SortArrayList {
                     for (int q = 0; q < unsortedValues.size(); q++) {
                         stringBuffer.append(unsortedValues.get(q) + ",");
                     }
-                    Log.e(TAG, "151 排序后:" + stringBuffer);
+                    Log.e(TAG, "151 排序后:" + stringBuffer+"temp:"+temp);
                 } else {
-                    animationioList.add(new AnimationScenarioItem(false, j, j, isLastInLoop));
+                    animationioList.add(new AnimationScenarioItem(false, j, j+1, isLastInLoop));
                     stringBuffer = new StringBuffer();
                     for (int q = 0; q < unsortedValues.size(); q++) {
                         stringBuffer.append(unsortedValues.get(q) + ",");
                     }
-                    Log.e(TAG, "158 排序后:" + stringBuffer);
+                    Log.e(TAG, "158 排序后:" + stringBuffer+"temp:"+temp);
                     break;
 
                 }
             }
-            unsortedValues.set(j + 1, temp);// 插入进来
-            Log.e(TAG, "168 AnimationScenarioItem j:" + j);
             //务必全部是j+1,因为j最后为-1,
-            animationioList.add(new AnimationScenarioItem(true, j + 1, j + 1, isLastInLoop));
-            stringBuffer = new StringBuffer();
-            for (int q = 0; q < unsortedValues.size(); q++) {
-                stringBuffer.append(unsortedValues.get(q) + ",");
-            }
-            Log.e(TAG, "174 排序后:" + stringBuffer);
+            unsortedValues.set(j + 1, temp);// 插入进来
+            Log.e(TAG, "168 AnimationScenarioItem j:" + j+"temp:"+temp);
         }
     }
 
