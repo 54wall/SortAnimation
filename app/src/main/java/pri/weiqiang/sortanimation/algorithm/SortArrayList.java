@@ -65,7 +65,6 @@ public class SortArrayList {
     // 插入排序 https://blog.csdn.net/csdn_aiyang/article/details/73108606
     public static void insertSort(ArrayList<Integer> unsortedValues, ArrayList<AnimationScenarioItem> animationioList) {
         Log.e(TAG, "插入排序!");
-        StringBuffer stringBuffer;
         boolean isLastInLoop = false;//插入排序，直到最后排序完成后，才会得知是最后位置
         // 直接插入排序
         for (int i = 1; i < unsortedValues.size(); i++) {
@@ -77,18 +76,8 @@ public class SortArrayList {
                 if (unsortedValues.get(j) > temp) {
                     unsortedValues.set(j + 1, unsortedValues.get(j));
                     animationioList.add(new AnimationScenarioItem(true, j, j + 1, isLastInLoop));
-                    stringBuffer = new StringBuffer();
-                    for (int q = 0; q < unsortedValues.size(); q++) {
-                        stringBuffer.append(unsortedValues.get(q) + ",");
-                    }
-                    Log.e(TAG, "151 排序后:" + stringBuffer+"temp:"+temp);
                 } else {
                     animationioList.add(new AnimationScenarioItem(false, j, j+1, isLastInLoop));
-                    stringBuffer = new StringBuffer();
-                    for (int q = 0; q < unsortedValues.size(); q++) {
-                        stringBuffer.append(unsortedValues.get(q) + ",");
-                    }
-                    Log.e(TAG, "158 排序后:" + stringBuffer+"temp:"+temp);
                     break;
 
                 }
@@ -105,16 +94,10 @@ public class SortArrayList {
         Log.e(TAG, "选择排序");
         int min;
         int tmp = 0;
-        boolean isLastInLoop;
+        boolean isLastInLoop =false;
         for (int i = 0; i < unsortedValues.size(); i++) {
             min = unsortedValues.get(i);
             for (int j = i + 1; j < unsortedValues.size(); j++) {
-
-                if (j == unsortedValues.size() - 1) {
-                    isLastInLoop = true;
-                } else {
-                    isLastInLoop = false;
-                }
                 if (unsortedValues.get(j) < min) {
                     min = unsortedValues.get(j);// 最小值
                     tmp = unsortedValues.get(i);
@@ -124,8 +107,8 @@ public class SortArrayList {
                 } else {
                     animationioList.add(new AnimationScenarioItem(false, i, j, isLastInLoop));
                 }
-
             }
+            animationioList.add(new AnimationScenarioItem(false, i, i, true));
         }
     }
 
