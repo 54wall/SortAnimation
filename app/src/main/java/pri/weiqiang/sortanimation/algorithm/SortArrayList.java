@@ -243,7 +243,6 @@ public class SortArrayList {
     // 堆排序代码实现 https://www.cnblogs.com/Java3y/p/8639937.html
     public static void heapSort(ArrayList<Integer> unsortedValues, int n, ArrayList<AnimationScenarioItem> animationioList) {
         int i, tmp;
-        boolean isLastInLoop = false;
         // 从(n/2-1) --> 0逐次遍历。遍历之后，得到的数组实际上是一个(最大)二叉堆。
         for (i = n / 2 - 1; i >= 0; i--) {
             maxHeapDown(unsortedValues, i, n - 1, animationioList);
@@ -254,7 +253,7 @@ public class SortArrayList {
             tmp = unsortedValues.get(0);
             unsortedValues.set(0, unsortedValues.get(i));
             unsortedValues.set(i, tmp);
-            animationioList.add(new AnimationScenarioItem(true, 0, i, isLastInLoop));
+            animationioList.add(new AnimationScenarioItem(true, 0, i, true));
             // 调整a[0...i-1]，使得a[0...i-1]仍然是一个最大堆。
             // 即，保证a[i-1]是a[0...i-1]中的最大值。
             maxHeapDown(unsortedValues, 0, i - 1, animationioList);
@@ -265,7 +264,6 @@ public class SortArrayList {
         int c = start; // 当前(current)节点的位置
         int l = 2 * c + 1; // 左(left)孩子的位置
         int tmp = unsortedValues.get(c); // 当前(current)节点的大小
-        boolean isLastInLoop = false;
         for (; l <= end; c = l, l = 2 * l + 1) {
             // "l"是左孩子，"l+1"是右孩子
             if (l < end && unsortedValues.get(l) < unsortedValues.get(l + 1))
@@ -275,8 +273,16 @@ public class SortArrayList {
             else { // 交换值
                 unsortedValues.set(c, unsortedValues.get(l));
                 unsortedValues.set(l, tmp);
-                animationioList.add(new AnimationScenarioItem(true, c, l, isLastInLoop));
+                animationioList.add(new AnimationScenarioItem(true, c, l, false));
             }
         }
+    }
+
+    private static void logList(ArrayList<Integer> unsortedValues){
+        StringBuffer stringBuffer= new StringBuffer();
+        for (int i = 0; i < unsortedValues.size(); i++) {
+            stringBuffer.append(unsortedValues.get(i)+",");
+        }
+        Log.e(TAG,"一趟排序后:"+stringBuffer);
     }
 }

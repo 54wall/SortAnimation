@@ -100,8 +100,8 @@ public class SortFragment extends Fragment {
 
         }
         stringBuffer= new StringBuffer();
-        for (int q = 0; q < unsortedValues.size(); q++) {
-            stringBuffer.append(unsortedValues.get(q)+",");
+        for (int i = 0; i < unsortedValues.size(); i++) {
+            stringBuffer.append(unsortedValues.get(i)+",");
         }
         Log.e(TAG,"排序结束后:"+stringBuffer);
     }
@@ -158,7 +158,7 @@ public class SortFragment extends Fragment {
 
             }
         });
-        algorithmSpinner.setSelection(Constant.ALGORITHM_HEER, true);
+        algorithmSpinner.setSelection(Constant.ALGORITHM_HEAP, true);
         mLlContainer = view.findViewById(R.id.ll_container);
         mWidth = view.getMeasuredWidth();
         mRectHeight = view.getMeasuredHeight();
