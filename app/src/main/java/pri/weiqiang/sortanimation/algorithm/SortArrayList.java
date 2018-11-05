@@ -124,13 +124,13 @@ public class SortArrayList {
             // 从后往前比较// 如果没有比关键值小的，比较下一个，直到有比关键值小的交换位置，然后又从前往后比较
             while (end > start && unsortedValues.get(end) >= key) {
                 end--;
-                animationioList.add(new AnimationScenarioItem(false, end, end, isLastInLoop));
+                animationioList.add(new AnimationScenarioItem(false, start, end, isLastInLoop));
             }
             if (unsortedValues.get(end) <= key) {
                 int temp = unsortedValues.get(end);
                 unsortedValues.set(end, unsortedValues.get(start));
                 unsortedValues.set(start, temp);
-                animationioList.add(new AnimationScenarioItem(true, end, start, isLastInLoop));
+                animationioList.add(new AnimationScenarioItem(true, start, end, isLastInLoop));
                 Log.e(TAG, "key:" + key + ",从后往前比较 end:" + end + ",unsortedValues.get(end):" + unsortedValues.get(end) +
                         ",start:" + start + ",unsortedValues.get(start):" + unsortedValues.get(start));
                 Log.e(TAG, "---start:" + start);
@@ -138,7 +138,7 @@ public class SortArrayList {
             // 从前往后比较// 如果没有比关键值大的，比较下一个，直到有比关键值大的交换位置
             while (end > start && unsortedValues.get(start) <= key) {
                 start++;
-                animationioList.add(new AnimationScenarioItem(false, start, start, isLastInLoop));
+                animationioList.add(new AnimationScenarioItem(false, start, end, isLastInLoop));
             }
             if (unsortedValues.get(start) >= key) {
                 int temp = unsortedValues.get(start);
@@ -177,7 +177,7 @@ public class SortArrayList {
         }
     }
 
-    public static void merge(ArrayList<Integer> unsortedValues, int low, int mid, int high, ArrayList<AnimationScenarioItem> animationioList) {
+    private static void merge(ArrayList<Integer> unsortedValues, int low, int mid, int high, ArrayList<AnimationScenarioItem> animationioList) {
         ArrayList<Integer> temp = new ArrayList<>();
         Log.e(TAG, "temp.size():" + temp.size());
         int i = low;
@@ -222,7 +222,7 @@ public class SortArrayList {
                         animationioList.add(new AnimationScenarioItem(true, j, j + d, isLastInLoop));
 
                     } else {
-                        animationioList.add(new AnimationScenarioItem(false, j, j, isLastInLoop));
+                        animationioList.add(new AnimationScenarioItem(false, j, j+d, isLastInLoop));
                     }
                 }
             }

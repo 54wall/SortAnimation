@@ -64,7 +64,7 @@ public class SortFragment extends Fragment {
                 animationioList = new ArrayList<>();
                 ArrayList<Integer> integerArrayList = new ArrayList<>(convertToIntArray(inputUserArray));
                 rectCount = integerArrayList.size();
-                drawBubbles(integerArrayList);
+                drawRects(integerArrayList);
                 sort(integerArrayList, animationioList);
                 runAnimationIteration();
             } else {
@@ -158,7 +158,7 @@ public class SortFragment extends Fragment {
 
             }
         });
-        algorithmSpinner.setSelection(2, true);
+        algorithmSpinner.setSelection(Constant.ALGORITHM_HEER, true);
         mLlContainer = view.findViewById(R.id.ll_container);
         mWidth = view.getMeasuredWidth();
         mRectHeight = view.getMeasuredHeight();
@@ -194,8 +194,8 @@ public class SortFragment extends Fragment {
 
     }
 
-    private void drawBubbles(ArrayList<Integer> listToDraw) {
-        Log.e(TAG, "drawBubbles");
+    private void drawRects(ArrayList<Integer> listToDraw) {
+        Log.e(TAG, "drawRects");
         if (mLlContainer != null) {
             mLlContainer.removeAllViews();
             mLlContainer.clearAnimation();
@@ -208,7 +208,7 @@ public class SortFragment extends Fragment {
         for (Integer currentIntValue : listToDraw) {
             RectView rectView = new RectView(getContext());
             rectView.setImageBitmap(createCalculatedBitmap(currentIntValue));
-            rectView.setMinimumHeight(20);//250
+            rectView.setMinimumHeight(150);//避免0等较小数值，没有高度
             rectView.setNumber(currentIntValue);
             rectView.setId(pos);
             if (mLlContainer != null) {
