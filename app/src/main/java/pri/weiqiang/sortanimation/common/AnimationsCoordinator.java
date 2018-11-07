@@ -32,7 +32,7 @@ public class AnimationsCoordinator implements AlgorithmStepsInterface {
     public void showSwapStep(final int curPosition, final int nextPosition, final boolean isBubbleOnFinalPosition) {
 //        Log.e(TAG, "showSwapStep");
         if (bubblesContainer != null && bubblesContainer.getChildCount() > 0 && bubblesContainer.getChildCount() > nextPosition) {
-            Log.e(TAG, "curPosition:" + curPosition + ",nextPosition:" + nextPosition);
+//            Log.e(TAG, "curPosition:" + curPosition + ",nextPosition:" + nextPosition);
             final RectView curRectView = (RectView) bubblesContainer.getChildAt(curPosition);
             final RectView nextRectView = (RectView) bubblesContainer.getChildAt(nextPosition);
 

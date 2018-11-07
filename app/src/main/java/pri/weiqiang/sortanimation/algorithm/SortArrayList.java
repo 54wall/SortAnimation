@@ -94,7 +94,6 @@ public class SortArrayList {
         Log.e(TAG, "选择排序");
         int min;
         int tmp = 0;
-        boolean isLastInLoop =false;
         for (int i = 0; i < unsortedValues.size(); i++) {
             min = unsortedValues.get(i);
             for (int j = i + 1; j < unsortedValues.size(); j++) {
@@ -103,11 +102,12 @@ public class SortArrayList {
                     tmp = unsortedValues.get(i);
                     unsortedValues.set(i, min);
                     unsortedValues.set(j, tmp);
-                    animationioList.add(new AnimationScenarioItem(true, i, j, isLastInLoop));
+                    animationioList.add(new AnimationScenarioItem(true, i, j, false));
                 } else {
-                    animationioList.add(new AnimationScenarioItem(false, i, j, isLastInLoop));
+                    animationioList.add(new AnimationScenarioItem(false, i, j, false));
                 }
             }
+            //AnimationScenarioItem中的isFinalPlace是针对互换位置后的后边那个项目来讲，如果不增加此处代码，必须更改AnimationScenarioItem
             animationioList.add(new AnimationScenarioItem(false, i, i, true));
         }
     }
@@ -121,7 +121,7 @@ public class SortArrayList {
         boolean isLastInLoop = false;
         while (end > start) {
 
-            // 从后往前比较// 如果没有比关键值小的，比较下一个，直到有比关键值小的交换位置，然后又从前往后比较
+            // 从后往前比较，如果没有比关键值小的，比较下一个，直到有比关键值小的交换位置，然后又从前往后比较
             while (end > start && unsortedValues.get(end) >= key) {
                 end--;
                 animationioList.add(new AnimationScenarioItem(false, start, end, isLastInLoop));
@@ -135,7 +135,7 @@ public class SortArrayList {
                         ",start:" + start + ",unsortedValues.get(start):" + unsortedValues.get(start));
                 Log.e(TAG, "---start:" + start);
             }
-            // 从前往后比较// 如果没有比关键值大的，比较下一个，直到有比关键值大的交换位置
+            // 从前往后比较，如果没有比关键值大的，比较下一个，直到有比关键值大的交换位置
             while (end > start && unsortedValues.get(start) <= key) {
                 start++;
                 animationioList.add(new AnimationScenarioItem(false, start, end, isLastInLoop));
@@ -154,21 +154,21 @@ public class SortArrayList {
 
         // 递归
         if (start > low) {
-            Log.e(TAG, "迭代******start > low!" + ",start:" + start + ",low:" + low);
-            quickSort(unsortedValues, low, start - 1, animationioList);// 左边序列。第一个索引位置到关键值索引-1
+            Log.e(TAG, "迭代 start > low!" + ",start:" + start + ",low:" + low);
+            quickSort(unsortedValues, low, start - 1, animationioList);// 左边序列，第一个索引位置到关键值索引-1
         }
         if (end < high) {
-            Log.e(TAG, "迭代*******end < high!" + ",end:" + end + ",high:" + high);
-            quickSort(unsortedValues, end + 1, high, animationioList);// 右边序列。从关键值索引+1到最后一个
+            Log.e(TAG, "迭代 end < high!" + ",end:" + end + ",high:" + high);
+            quickSort(unsortedValues, end + 1, high, animationioList);// 右边序列，从关键值索引+1到最后一个
         }
     }
 
 
     // 归并算法 https://www.cnblogs.com/of-fanruice/p/7678801.html
     public static void mergeSort(ArrayList<Integer> unsortedValues, int low, int high, ArrayList<AnimationScenarioItem> animationioList) {
-        Log.e(TAG, "归并排序!");
+        Log.e(TAG, "归并排序! mergeSort");
         int mid = (low + high) / 2;
-        Log.e(TAG, "mid mid:" + mid);
+        Log.e(TAG, "mid:" + mid);
         if (low < high) {
             mergeSort(unsortedValues, low, mid, animationioList);
             mergeSort(unsortedValues, mid + 1, high, animationioList);
@@ -179,7 +179,7 @@ public class SortArrayList {
 
     private static void merge(ArrayList<Integer> unsortedValues, int low, int mid, int high, ArrayList<AnimationScenarioItem> animationioList) {
         ArrayList<Integer> temp = new ArrayList<>();
-        Log.e(TAG, "temp.size():" + temp.size());
+        Log.e(TAG, "merge 归并temp.size():" + temp.size());
         int i = low;
         int j = mid + 1;
         int k = 0;
@@ -192,11 +192,11 @@ public class SortArrayList {
                 temp.add(k++, unsortedValues.get(j++));
             }
         }
-        // 把左边剩余的数移入数组
+        // i<=mid是剩余全部中的较小的，把左边剩余的数移入数组
         while (i <= mid) {
             temp.add(k++, unsortedValues.get(i++));
         }
-        // 把右边边剩余的数移入数组
+        // j <= high是剩余全部中的大的，把右边边剩余的数移入数组，所以在while (i <= mid) 执行
         while (j <= high) {
             temp.add(k++, unsortedValues.get(j++));
         }

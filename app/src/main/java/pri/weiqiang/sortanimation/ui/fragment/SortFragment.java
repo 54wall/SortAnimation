@@ -158,7 +158,7 @@ public class SortFragment extends Fragment {
 
             }
         });
-        algorithmSpinner.setSelection(Constant.ALGORITHM_HEAP, true);
+        algorithmSpinner.setSelection(Constant.ALGORITHM_MERGE, true);
         mLlContainer = view.findViewById(R.id.ll_container);
         mWidth = view.getMeasuredWidth();
         mRectHeight = view.getMeasuredHeight();
@@ -227,9 +227,11 @@ public class SortFragment extends Fragment {
     private Bitmap createCalculatedBitmap(Integer currentIntValue) {
 //        Log.e(TAG, "createCalculatedBitmap");
         mWidth = view.getMeasuredWidth();
-        //maxRectHeight-minRectHeight+1:+1 是因为计算的是距离，否则最高的矩形还是会超出屏幕
-        mRectHeight = view.getMeasuredHeight() * currentIntValue / (maxRectHeight-minRectHeight+1)+1;
-        Log.e(TAG,"createCalculatedBitmap currentIntValue:"+currentIntValue+",mRectHeight:"+mRectHeight);
+        //maxRectHeight-minRectHeight+1:+1 是因为计算的是距离，否则最高的矩形还是会超出屏幕，minRectHeight即minIntValue
+        mRectHeight = view.getMeasuredHeight() * (currentIntValue-minRectHeight) / (maxRectHeight-minRectHeight+1)+1;
+        Log.e(TAG,"createCalculatedBitmap currentIntValue:"+currentIntValue+",mRectHeight:"+mRectHeight+"view.getMeasuredHeight():"+view.getMeasuredHeight()
+                +",maxRectHeight:"+maxRectHeight
+                +",minRectHeight:"+minRectHeight);
         final Rect bounds = new Rect();
         Paint paint = new Paint(Paint.LINEAR_TEXT_FLAG);
         paint.setTextSize(RectView.TEXT_SIZE);
