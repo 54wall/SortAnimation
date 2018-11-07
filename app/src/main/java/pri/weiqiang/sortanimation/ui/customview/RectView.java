@@ -3,7 +3,6 @@ package pri.weiqiang.sortanimation.ui.customview;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.support.v7.widget.AppCompatImageView;
@@ -11,15 +10,8 @@ import android.util.AttributeSet;
 
 import pri.weiqiang.sortanimation.R;
 
-/**
- * This is custom ImageView which could draw a "Bubble with a number inside".
- */
-
 public class RectView extends AppCompatImageView {
-    public static final int START_X_POS = 5;//25
     public static final int TEXT_BASELINE_Y = 105;//105
-    public static final int BOTTOM_POS = 120;
-    public static final int TOP_POS = 60;
     public static final float TEXT_SIZE = 45f;
     Paint paint;
     Rect bounds;
@@ -30,7 +22,6 @@ public class RectView extends AppCompatImageView {
     private int mWidth;
     private int mRectHeight;
     private int mRectWidth;
-    private LinearGradient mLinearGradient;
 
     public RectView(Context context) {
         this(context, null);
@@ -60,16 +51,13 @@ public class RectView extends AppCompatImageView {
         mWidth = getMeasuredWidth();
         mRectHeight = getMeasuredHeight();
         mRectWidth = mWidth;
-//        Log.e(TAG, "onSizeChanged mWidth:" + mWidth + ",mRectWidth:" + mRectWidth);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-//        Log.e(TAG,"onDraw()");
         super.onDraw(canvas);
         if (valueToDraw != null) {
             String text = valueToDraw.toString();
-//            paint.getTextBounds(text, 0, text.length(), bounds);
             if (isOnFinalPlace) {
                 paint.setColor(getResources().getColor(R.color.colorPrimaryDark));
             } else {
@@ -79,20 +67,16 @@ public class RectView extends AppCompatImageView {
                     paint.setColor(getResources().getColor(R.color.colorAccent));
                 }
             }
-//            Log.e(TAG, "!!!!onDraw mcurrentHeight:" + mcurrentHeight + ",mRectWidth:" + mRectWidth + ",mRectHeight:" + mRectHeight);
             canvas.drawRect(0, 5, mRectWidth, mRectHeight, paint);
-//            canvas.drawRect(0, /*TOP_POS+*/valueToDraw, bounds.width() + PADDING, BOTTOM_POS, paint);
-//            canvas.drawOval(0, TOP_POS, bounds.width() + PADDING, BOTTOM_POS, paint);//绘制圆形
             paint.setColor(Color.WHITE);
             paint.setTextAlign(Paint.Align.CENTER);//以文字中间位置为坐标
-//            canvas.drawText(text, START_X_POS, TEXT_BASELINE_Y, paint);
             canvas.drawText(text, mRectWidth / 2, TEXT_BASELINE_Y, paint);
         }
     }
 
 
     /**
-     * Draws a number as a bitmap inside of the bubble circle.
+     * 在矩形中绘制相应数字
      *
      * @param numberValueToDraw value which should appears in the center of {@link RectView}
      */
@@ -102,25 +86,22 @@ public class RectView extends AppCompatImageView {
     }
 
     /**
-     * Background color of bubble will be changed to dark blue.
+     * 矩形位于排序的最后位置，背景颜色将会置为最终颜色
      *
      * @param isOnFinalPlace
      */
-    public void setBubbleIsOnFinalPlace(boolean isOnFinalPlace) {
+    public void setIsOnFinalPlace(boolean isOnFinalPlace) {
         this.isOnFinalPlace = isOnFinalPlace;
         invalidate();
     }
 
-    public boolean isBubbleSelected() {
-        return isSelected;
-    }
 
     /**
-     * Background color will be changed to blue if true
+     * 处于比较中的矩形，背景颜色处于选中状态
      *
      * @param isSelected
      */
-    public void setBubbleSelected(boolean isSelected) {
+    public void setSelected(boolean isSelected) {
         this.isSelected = isSelected;
         invalidate();
     }

@@ -28,10 +28,9 @@ public class AnimationsCoordinator implements AlgorithmStepsInterface {
     }
 
     @Override
-    public void showSwapStep(final int curPosition, final int nextPosition, final boolean isBubbleOnFinalPosition) {
+    public void showSwapStep(final int curPosition, final int nextPosition, final boolean isOnFinalPlace) {
 //        Log.e(TAG, "showSwapStep");
         if (bubblesContainer != null && bubblesContainer.getChildCount() > 0 && bubblesContainer.getChildCount() > nextPosition) {
-//            Log.e(TAG, "curPosition:" + curPosition + ",nextPosition:" + nextPosition);
             final RectView curRectView = (RectView) bubblesContainer.getChildAt(curPosition);
             final RectView nextRectView = (RectView) bubblesContainer.getChildAt(nextPosition);
 
@@ -43,14 +42,12 @@ public class AnimationsCoordinator implements AlgorithmStepsInterface {
                 public void onAnimationUpdate(ValueAnimator animation) {
 
                     int value = (Integer) animation.getAnimatedValue();
-//                    Log.e(TAG,"!!!onAnimationUpdate");
-//                    Log.e(TAG,"!!!showSwapStep onAnimationUpdate value:"+value);
                     if (value % 2 == 0) {
-                        curRectView.setBubbleSelected(false);
-                        nextRectView.setBubbleSelected(false);
+                        curRectView.setSelected(false);
+                        nextRectView.setSelected(false);
                     } else {
-                        curRectView.setBubbleSelected(true);
-                        nextRectView.setBubbleSelected(true);
+                        curRectView.setSelected(true);
+                        nextRectView.setSelected(true);
                     }
                 }
             });
@@ -59,11 +56,10 @@ public class AnimationsCoordinator implements AlgorithmStepsInterface {
             blinkAnimation.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-//                    Log.e(TAG,"!!!onAnimationEnd");
                     super.onAnimationEnd(animation);
-                    curRectView.setBubbleSelected(false);
-                    curRectView.setBubbleIsOnFinalPlace(isBubbleOnFinalPosition);
-                    nextRectView.setBubbleSelected(false);
+                    curRectView.setSelected(false);
+                    curRectView.setIsOnFinalPlace(isOnFinalPlace);
+                    nextRectView.setSelected(false);
                     bubblesContainer.removeView(curRectView);
                     bubblesContainer.addView(curRectView, nextPosition);
                     bubblesContainer.removeView(nextRectView);
@@ -77,7 +73,7 @@ public class AnimationsCoordinator implements AlgorithmStepsInterface {
     }
 
     @Override
-    public void showNonSwapStep(final int curPosition, final int nextPosition, final boolean isBubbleOnFinalPlace) {
+    public void showNonSwapStep(final int curPosition, final int nextPosition, final boolean isOnFinalPlace) {
 //        Log.e(TAG, "showNonSwapStep");
         if (bubblesContainer != null && bubblesContainer.getChildCount() > 0 && bubblesContainer.getChildCount() > nextPosition) {
             final RectView curRectView = (RectView) bubblesContainer.getChildAt(curPosition);
@@ -92,11 +88,11 @@ public class AnimationsCoordinator implements AlgorithmStepsInterface {
                     int value = (Integer) animation.getAnimatedValue();
 //                    Log.e(TAG,"!!!howNonSwapStep onAnimationUpdate value:"+value);
                     if (value % 2 == 0) {
-                        curRectView.setBubbleSelected(false);
-                        nextRectView.setBubbleSelected(false);
+                        curRectView.setSelected(false);
+                        nextRectView.setSelected(false);
                     } else {
-                        curRectView.setBubbleSelected(true);
-                        nextRectView.setBubbleSelected(true);
+                        curRectView.setSelected(true);
+                        nextRectView.setSelected(true);
                     }
                 }
             });
@@ -106,9 +102,9 @@ public class AnimationsCoordinator implements AlgorithmStepsInterface {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
-                    curRectView.setBubbleSelected(false);
-                    nextRectView.setBubbleSelected(false);
-                    nextRectView.setBubbleIsOnFinalPlace(isBubbleOnFinalPlace);
+                    curRectView.setSelected(false);
+                    nextRectView.setSelected(false);
+                    nextRectView.setIsOnFinalPlace(isOnFinalPlace);
                     notifySwapStepAnimationEnd(curPosition);
                 }
             });
@@ -119,9 +115,9 @@ public class AnimationsCoordinator implements AlgorithmStepsInterface {
     public void showFinish() {
 //        Log.e(TAG, "showFinish");
         if (bubblesContainer != null && bubblesContainer.getChildCount() > 0) {
-//            ((RectView) bubblesContainer.getChildAt(0)).setBubbleIsOnFinalPlace(true);//仅对冒泡法适用
+//            ((RectView) bubblesContainer.getChildAt(0)).setIsOnFinalPlace(true);//仅对冒泡法适用
             for (int i = 0; i < bubblesContainer.getChildCount(); i++) {
-                ((RectView) bubblesContainer.getChildAt(i)).setBubbleIsOnFinalPlace(true);//排序完成后，全部设置为最终颜色
+                ((RectView) bubblesContainer.getChildAt(i)).setIsOnFinalPlace(true);//排序完成后，全部设置为最终颜色
             }
         }
         Toast.makeText(bubblesContainer.getContext(), R.string.sort_finish, Toast.LENGTH_SHORT).show();

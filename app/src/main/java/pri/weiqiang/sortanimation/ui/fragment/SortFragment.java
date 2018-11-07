@@ -196,7 +196,6 @@ public class SortFragment extends Fragment {
         if (animationioList != null && !animationioList.isEmpty() && animationioList.size() > scenarioItemIndex) {
 
             AnimationScenarioItem animationStep = animationioList.get(scenarioItemIndex);
-//            Log.e(TAG,"scenarioItemIndex:"+scenarioItemIndex+"animationStep.getCurPosition():"+animationStep.getCurPosition()+",animationStep.getNextPosition():"+animationStep.getNextPosition());
             scenarioItemIndex++;
             if (animationStep.isShouldBeSwapped()) {
                 animationsCoordinator.showSwapStep(animationStep.getCurPosition(), animationStep.getNextPosition(), animationStep.isFinalPlace());

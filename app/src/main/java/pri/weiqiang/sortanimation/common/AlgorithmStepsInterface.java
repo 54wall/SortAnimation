@@ -9,18 +9,18 @@ public interface AlgorithmStepsInterface {
     /**
      * Visualizes step, when elements should change their places with each other
      *
-     * @param curPosition          position of the firs element, which should be changed
-     * @param isBubbleOnFinalPlace set true, when element after swapping is on the right place and his position is final
+     * @param curPosition    position of the firs element, which should be changed
+     * @param isOnFinalPlace set true, when element after swapping is on the right place and his position is final
      */
-    void showSwapStep(int curPosition, int nextPosition, boolean isBubbleOnFinalPlace);
+    void showSwapStep(int curPosition, int nextPosition, boolean isOnFinalPlace);
 
     /**
      * Visualizes step, when elements should stay on the same places;
      *
-     * @param curPosition          position of the firs element
-     * @param isBubbleOnFinalPlace set true, when element on position+1 is on the right place and his position is final
+     * @param curPosition    position of the firs element
+     * @param isOnFinalPlace set true, when element on position+1 is on the right place and his position is final
      */
-    void showNonSwapStep(int curPosition, int nextPosition, boolean isBubbleOnFinalPlace);
+    void showNonSwapStep(int curPosition, int nextPosition, boolean isOnFinalPlace);
 
     /**
      * Call when last item was sorted. Notifies user that sorting is finished.

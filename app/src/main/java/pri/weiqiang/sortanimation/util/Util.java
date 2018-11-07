@@ -5,10 +5,6 @@ import android.text.TextUtils;
 
 import java.util.ArrayList;
 
-/**
- * Typical android helpful staff lives here.
- */
-
 public class Util {
 
     public static int dpToPx(Context context, int sizeInDp) {
