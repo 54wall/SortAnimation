@@ -58,14 +58,27 @@ public class SortFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            String inputUserArray = mEtInput.getText().toString();
-            if (!TextUtils.isEmpty(inputUserArray)) {
+            String input = mEtInput.getText().toString();
+            if (!TextUtils.isEmpty(input)) {
                 resetPreviousData();
                 animationioList = new ArrayList<>();
-                ArrayList<Integer> integerArrayList = new ArrayList<>(convertToIntArray(inputUserArray));
-                rectCount = integerArrayList.size();
-                drawRects(integerArrayList);
-                sort(integerArrayList, animationioList);
+                ArrayList<Integer> integerList = new ArrayList<>(Util.convertToIntArray(input));
+                //更新数据，minRectHeight maxRectHeight 同步重置
+                minRectHeight = integerList.get(0);
+                maxRectHeight = integerList.get(0);
+                for (int i = 0; i < integerList.size(); i++) {
+                    int height = integerList.get(i);
+
+                    if (height > maxRectHeight) {
+                        maxRectHeight = height;
+                    }
+                    if (height < minRectHeight) {
+                        minRectHeight = height;
+                    }
+                }
+                rectCount = integerList.size();
+                drawRects(integerList);
+                sort(integerList, animationioList);
                 runAnimationIteration();
             } else {
                 Toast.makeText(getContext(), R.string.empty_field_warning, Toast.LENGTH_LONG).show();
@@ -86,24 +99,24 @@ public class SortFragment extends Fragment {
                 SortArrayList.selectSort(unsortedValues, animationioList);
                 break;
             case Constant.ALGORITHM_QUICK:
-                SortArrayList.quickSort(unsortedValues, 0,unsortedValues.size()-1,animationioList);
+                SortArrayList.quickSort(unsortedValues, 0, unsortedValues.size() - 1, animationioList);
                 break;
             case Constant.ALGORITHM_MERGE:
-                SortArrayList.mergeSort(unsortedValues, 0,unsortedValues.size()-1,animationioList);
+                SortArrayList.mergeSort(unsortedValues, 0, unsortedValues.size() - 1, animationioList);
                 break;
             case Constant.ALGORITHM_HEER:
-                SortArrayList.heerSort(unsortedValues,animationioList);
+                SortArrayList.heerSort(unsortedValues, animationioList);
                 break;
             case Constant.ALGORITHM_HEAP:
-                SortArrayList.heapSort(unsortedValues, unsortedValues.size(),animationioList);
+                SortArrayList.heapSort(unsortedValues, unsortedValues.size(), animationioList);
                 break;
 
         }
-        stringBuffer= new StringBuffer();
+        stringBuffer = new StringBuffer();
         for (int i = 0; i < unsortedValues.size(); i++) {
-            stringBuffer.append(unsortedValues.get(i)+",");
+            stringBuffer.append(unsortedValues.get(i) + ",");
         }
-        Log.e(TAG,"排序结束后:"+stringBuffer);
+        Log.e(TAG, "排序结束后:" + stringBuffer);
     }
 
     private void resetPreviousData() {
@@ -228,37 +241,13 @@ public class SortFragment extends Fragment {
 //        Log.e(TAG, "createCalculatedBitmap");
         mWidth = view.getMeasuredWidth();
         //maxRectHeight-minRectHeight+1:+1 是因为计算的是距离，否则最高的矩形还是会超出屏幕，minRectHeight即minIntValue
-        mRectHeight = view.getMeasuredHeight() * (currentIntValue-minRectHeight) / (maxRectHeight-minRectHeight+1)+1;
-        Log.e(TAG,"createCalculatedBitmap currentIntValue:"+currentIntValue+",mRectHeight:"+mRectHeight+"view.getMeasuredHeight():"+view.getMeasuredHeight()
-                +",maxRectHeight:"+maxRectHeight
-                +",minRectHeight:"+minRectHeight);
+        mRectHeight = view.getMeasuredHeight() * (currentIntValue - minRectHeight) / (maxRectHeight - minRectHeight + 1) + 1;
         final Rect bounds = new Rect();
         Paint paint = new Paint(Paint.LINEAR_TEXT_FLAG);
         paint.setTextSize(RectView.TEXT_SIZE);
         paint.getTextBounds(currentIntValue.toString(), 0, currentIntValue.toString().length(), bounds);
-        return Bitmap.createBitmap(mWidth / rectCount-RECT_MARGIN, mRectHeight, Bitmap.Config.ALPHA_8);
+        return Bitmap.createBitmap(mWidth / rectCount - RECT_MARGIN, mRectHeight, Bitmap.Config.ALPHA_8);
     }
 
-    private ArrayList convertToIntArray(String inputUserArray) {
-        ArrayList<Integer> parsedUserArray = new ArrayList<>();
-        String[] stringArray = inputUserArray.split(",");
-        int numberOfElements = stringArray.length;
-        minRectHeight = Integer.parseInt(stringArray[0]);
-        maxRectHeight = Integer.parseInt(stringArray[0]);
-        for (int i = 0; i < numberOfElements; i++) {
-            if (!TextUtils.isEmpty(stringArray[i])) {
-                int hegiht = Integer.parseInt(stringArray[i]);
-                if (hegiht > maxRectHeight){
-                    maxRectHeight = hegiht;
-                }
-                if (hegiht < minRectHeight){
-                    minRectHeight = hegiht;
-                }
-                parsedUserArray.add(hegiht);
-            }
-        }
-        return parsedUserArray;
-
-    }
 
 }

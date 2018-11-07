@@ -55,7 +55,7 @@ public class SortArrayList {
                     unsortedValues.set(j + 1, temp);
                     animationioList.add(new AnimationScenarioItem(true, j, j + 1, isLastInLoop));
                 } else {
-                    animationioList.add(new AnimationScenarioItem(false, j, j+1, isLastInLoop));
+                    animationioList.add(new AnimationScenarioItem(false, j, j + 1, isLastInLoop));
                 }
             }
         }
@@ -77,14 +77,14 @@ public class SortArrayList {
                     unsortedValues.set(j + 1, unsortedValues.get(j));
                     animationioList.add(new AnimationScenarioItem(true, j, j + 1, isLastInLoop));
                 } else {
-                    animationioList.add(new AnimationScenarioItem(false, j, j+1, isLastInLoop));
+                    animationioList.add(new AnimationScenarioItem(false, j, j + 1, isLastInLoop));
                     break;
 
                 }
             }
             //务必全部是j+1,因为j最后为-1,
             unsortedValues.set(j + 1, temp);// 插入进来
-            Log.e(TAG, "168 AnimationScenarioItem j:" + j+"temp:"+temp);
+            Log.e(TAG, "168 AnimationScenarioItem j:" + j + "temp:" + temp);
         }
     }
 
@@ -222,7 +222,7 @@ public class SortArrayList {
                         animationioList.add(new AnimationScenarioItem(true, j, j + d, isLastInLoop));
 
                     } else {
-                        animationioList.add(new AnimationScenarioItem(false, j, j+d, isLastInLoop));
+                        animationioList.add(new AnimationScenarioItem(false, j, j + d, isLastInLoop));
                     }
                 }
             }
@@ -278,11 +278,11 @@ public class SortArrayList {
         }
     }
 
-    private static void logList(ArrayList<Integer> unsortedValues){
-        StringBuffer stringBuffer= new StringBuffer();
+    private static void logList(ArrayList<Integer> unsortedValues) {
+        StringBuffer stringBuffer = new StringBuffer();
         for (int i = 0; i < unsortedValues.size(); i++) {
-            stringBuffer.append(unsortedValues.get(i)+",");
+            stringBuffer.append(unsortedValues.get(i) + ",");
         }
-        Log.e(TAG,"一趟排序后:"+stringBuffer);
+        Log.e(TAG, "一趟排序后:" + stringBuffer);
     }
 }

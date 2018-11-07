@@ -3,7 +3,6 @@ package pri.weiqiang.sortanimation.common;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
-import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
@@ -121,7 +120,7 @@ public class AnimationsCoordinator implements AlgorithmStepsInterface {
 //        Log.e(TAG, "showFinish");
         if (bubblesContainer != null && bubblesContainer.getChildCount() > 0) {
 //            ((RectView) bubblesContainer.getChildAt(0)).setBubbleIsOnFinalPlace(true);//仅对冒泡法适用
-            for(int i =0;i<bubblesContainer.getChildCount();i++){
+            for (int i = 0; i < bubblesContainer.getChildCount(); i++) {
                 ((RectView) bubblesContainer.getChildAt(i)).setBubbleIsOnFinalPlace(true);//排序完成后，全部设置为最终颜色
             }
         }

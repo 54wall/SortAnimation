@@ -8,11 +8,8 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import pri.weiqiang.sortanimation.R;
-
-import static pri.weiqiang.sortanimation.ui.fragment.SortFragment.RECT_MARGIN;
 
 /**
  * This is custom ImageView which could draw a "Bubble with a number inside".
@@ -89,7 +86,7 @@ public class RectView extends AppCompatImageView {
             paint.setColor(Color.WHITE);
             paint.setTextAlign(Paint.Align.CENTER);//以文字中间位置为坐标
 //            canvas.drawText(text, START_X_POS, TEXT_BASELINE_Y, paint);
-            canvas.drawText(text, mRectWidth/2, TEXT_BASELINE_Y, paint);
+            canvas.drawText(text, mRectWidth / 2, TEXT_BASELINE_Y, paint);
         }
     }
 
