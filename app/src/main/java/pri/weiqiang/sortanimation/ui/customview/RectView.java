@@ -11,7 +11,7 @@ import android.util.AttributeSet;
 import pri.weiqiang.sortanimation.R;
 
 public class RectView extends AppCompatImageView {
-    public static final int TEXT_BASELINE_Y = 105;//105
+    public static final int TEXT_BASELINE_Y = 105;
     public static final float TEXT_SIZE = 45f;
     Paint paint;
     Rect bounds;

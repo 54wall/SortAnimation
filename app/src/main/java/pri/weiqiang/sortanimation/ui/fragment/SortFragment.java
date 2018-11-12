@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -34,16 +36,20 @@ import pri.weiqiang.sortanimation.util.Util;
  */
 
 public class SortFragment extends Fragment {
-    public static final int PADDING = 50;
+    public static final int minHeight = 150;
     public static final int RECT_MARGIN = 1;//4
+    private LinearLayout viewLine;
+    private SparseIntArray lineHeightArray = new SparseIntArray();
     private String TAG = SortFragment.class.getSimpleName();
     private EditText mEtInput;
     private Button mBtnStart;
     private boolean isAnimationRunning;
     private int scenarioItemIndex = 0;
     private LinearLayout mLlContainer;
+    private RelativeLayout mRlContainerParent;
     private AnimationsCoordinator animationsCoordinator;
     private ArrayList<AnimationScenarioItem> animationioList;
+    private ArrayList<Integer> keyList;
     private Spinner algorithmSpinner;
     private int algorithmSelected = Constant.ALGORITHM_PUBBLE;
     private int mWidth;
@@ -53,8 +59,7 @@ public class SortFragment extends Fragment {
     private View view;
     private StringBuffer stringBuffer;
     private int rectCount = 0;
-
-    View.OnClickListener buttonClickListener = new View.OnClickListener() {
+    private View.OnClickListener buttonClickListener = new View.OnClickListener() {
 
         @Override
         public void onClick(View v) {
@@ -99,7 +104,8 @@ public class SortFragment extends Fragment {
                 SortArrayList.selectSort(unsortedValues, animationioList);
                 break;
             case Constant.ALGORITHM_QUICK:
-                SortArrayList.quickSort(unsortedValues, 0, unsortedValues.size() - 1, animationioList);
+                keyList = new ArrayList<>();
+                SortArrayList.quickSort(unsortedValues, 0, unsortedValues.size() - 1, animationioList, keyList);
                 break;
             case Constant.ALGORITHM_MERGE:
                 SortArrayList.mergeSort(unsortedValues, 0, unsortedValues.size() - 1, animationioList);
@@ -126,6 +132,11 @@ public class SortFragment extends Fragment {
             isAnimationRunning = false;
         }
         scenarioItemIndex = 0;
+        if (viewLine != null) {
+            Log.e(TAG, "removeView viewLine!");
+            mRlContainerParent.clearAnimation();
+            mRlContainerParent.removeView(viewLine);
+        }
     }
 
     @Override
@@ -171,8 +182,9 @@ public class SortFragment extends Fragment {
 
             }
         });
-        algorithmSpinner.setSelection(Constant.ALGORITHM_MERGE, true);
+        algorithmSpinner.setSelection(Constant.ALGORITHM_QUICK, true);
         mLlContainer = view.findViewById(R.id.ll_container);
+        mRlContainerParent = view.findViewById(R.id.rl_container_parent);
         mWidth = view.getMeasuredWidth();
         mRectHeight = view.getMeasuredHeight();
         animationsCoordinator = new AnimationsCoordinator(mLlContainer);
@@ -187,7 +199,7 @@ public class SortFragment extends Fragment {
     }
 
     private void runAnimationIteration() {
-//        Log.e(TAG, "runAnimationIteration");
+        Log.e(TAG, "runAnimationIteration");
         isAnimationRunning = true;
         if (animationioList != null && animationioList.size() == scenarioItemIndex) {
             animationsCoordinator.showFinish();
@@ -197,6 +209,14 @@ public class SortFragment extends Fragment {
 
             AnimationScenarioItem animationStep = animationioList.get(scenarioItemIndex);
             scenarioItemIndex++;
+            if (keyList != null && !keyList.isEmpty() && keyList.size() > scenarioItemIndex) {
+                int height = lineHeightArray.get(keyList.get(scenarioItemIndex));
+                if (height < minHeight) {
+                    viewLine.setY(minHeight);
+                } else {
+                    viewLine.setY(height);
+                }
+            }
             if (animationStep.isShouldBeSwapped()) {
                 animationsCoordinator.showSwapStep(animationStep.getCurPosition(), animationStep.getNextPosition(), animationStep.isFinalPlace());
             } else {
@@ -217,16 +237,26 @@ public class SortFragment extends Fragment {
         int marginInPx = Util.dpToPx(getContext(), RECT_MARGIN);
         lp.setMargins(0, 0, marginInPx, 0);
         int pos = 0;
+
         for (Integer currentIntValue : listToDraw) {
             RectView rectView = new RectView(getContext());
             rectView.setImageBitmap(createCalculatedBitmap(currentIntValue));
-            rectView.setMinimumHeight(150);//避免0等较小数值，没有高度
+            rectView.setMinimumHeight(minHeight);//避免0等较小数值，没有高度
             rectView.setNumber(currentIntValue);
             rectView.setId(pos);
             if (mLlContainer != null) {
                 mLlContainer.addView(rectView, lp);
             }
             pos++;
+        }
+        //快速排序中，绘制关键字比较线
+        if (algorithmSelected == Constant.ALGORITHM_QUICK) {
+            RelativeLayout.LayoutParams lpLine = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+            lpLine.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            lpLine.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            viewLine = (LinearLayout) inflater.inflate(R.layout.view_line, null);
+            mRlContainerParent.addView(viewLine, lpLine);
         }
     }
 
@@ -237,16 +267,16 @@ public class SortFragment extends Fragment {
      * @return empty bitmap with calculated size
      */
     private Bitmap createCalculatedBitmap(Integer currentIntValue) {
-//        Log.e(TAG, "createCalculatedBitmap");
         mWidth = view.getMeasuredWidth();
         //maxRectHeight-minRectHeight+1:+1 是因为计算的是距离，否则最高的矩形还是会超出屏幕，minRectHeight即minIntValue
-        mRectHeight = view.getMeasuredHeight() * (currentIntValue - minRectHeight) / (maxRectHeight - minRectHeight + 1) + 1;
+        //4/5 是为了使最高高度不超出屏幕，否则当最大值为比较的关键值时，快拍的关键字线viewLine将超出视野，
+        mRectHeight = view.getMeasuredHeight() * 4 / 5 * (currentIntValue - minRectHeight) / (maxRectHeight - minRectHeight + 1) + 1;
+        lineHeightArray.put(currentIntValue, mRectHeight);
         final Rect bounds = new Rect();
         Paint paint = new Paint(Paint.LINEAR_TEXT_FLAG);
         paint.setTextSize(RectView.TEXT_SIZE);
         paint.getTextBounds(currentIntValue.toString(), 0, currentIntValue.toString().length(), bounds);
         return Bitmap.createBitmap(mWidth / rectCount - RECT_MARGIN, mRectHeight, Bitmap.Config.ALPHA_8);
     }
-
 
 }
