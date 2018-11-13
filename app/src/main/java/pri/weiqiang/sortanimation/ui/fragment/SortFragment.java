@@ -46,9 +46,12 @@ public class SortFragment extends Fragment {
     private boolean isAnimationRunning;
     private int scenarioItemIndex = 0;
     private LinearLayout mLlContainer;
+    private LinearLayout mLlContainerMerge;
+    private LinearLayout mLlContainerMerge0;
+    private LinearLayout mLlContainerMerge1;
     private RelativeLayout mRlContainerParent;
     private AnimationsCoordinator animationsCoordinator;
-    private ArrayList<AnimationScenarioItem> animationioList;
+    private ArrayList<AnimationScenarioItem> animationList;
     private ArrayList<Integer> keyList;
     private Spinner algorithmSpinner;
     private int algorithmSelected = Constant.ALGORITHM_PUBBLE;
@@ -66,7 +69,7 @@ public class SortFragment extends Fragment {
             String input = mEtInput.getText().toString();
             if (!TextUtils.isEmpty(input)) {
                 resetPreviousData();
-                animationioList = new ArrayList<>();
+                animationList = new ArrayList<>();
                 ArrayList<Integer> integerList = new ArrayList<>(Util.convertToIntArray(input));
                 //更新数据，minRectHeight maxRectHeight 同步重置
                 minRectHeight = integerList.get(0);
@@ -83,7 +86,7 @@ public class SortFragment extends Fragment {
                 }
                 rectCount = integerList.size();
                 drawRects(integerList);
-                sort(integerList, animationioList);
+                sort(integerList, animationList);
                 runAnimationIteration();
             } else {
                 Toast.makeText(getContext(), R.string.empty_field_warning, Toast.LENGTH_LONG).show();
@@ -92,6 +95,8 @@ public class SortFragment extends Fragment {
     };
 
     private void sort(ArrayList<Integer> unsortedValues, ArrayList<AnimationScenarioItem> animationioList) {
+        mRlContainerParent.setVisibility(View.VISIBLE);
+        mLlContainerMerge.setVisibility(View.GONE);
         switch (algorithmSelected) {
 
             case Constant.ALGORITHM_PUBBLE:
@@ -108,6 +113,8 @@ public class SortFragment extends Fragment {
                 SortArrayList.quickSort(unsortedValues, 0, unsortedValues.size() - 1, animationioList, keyList);
                 break;
             case Constant.ALGORITHM_MERGE:
+                mRlContainerParent.setVisibility(View.GONE);
+                mLlContainerMerge.setVisibility(View.VISIBLE);
                 SortArrayList.mergeSort(unsortedValues, 0, unsortedValues.size() - 1, animationioList);
                 break;
             case Constant.ALGORITHM_HEER:
@@ -182,9 +189,14 @@ public class SortFragment extends Fragment {
 
             }
         });
-        algorithmSpinner.setSelection(Constant.ALGORITHM_QUICK, true);
+        algorithmSpinner.setSelection(Constant.ALGORITHM_MERGE, true);
         mLlContainer = view.findViewById(R.id.ll_container);
         mRlContainerParent = view.findViewById(R.id.rl_container_parent);
+        mLlContainerMerge = view.findViewById(R.id.ll_container_merge);
+        mLlContainerMerge0 = view.findViewById(R.id.ll_container_merge_0);
+        mLlContainerMerge1 = view.findViewById(R.id.ll_container_merge_1);
+
+        mLlContainer = view.findViewById(R.id.ll_container);
         mWidth = view.getMeasuredWidth();
         mRectHeight = view.getMeasuredHeight();
         animationsCoordinator = new AnimationsCoordinator(mLlContainer);
@@ -201,13 +213,13 @@ public class SortFragment extends Fragment {
     private void runAnimationIteration() {
         Log.e(TAG, "runAnimationIteration");
         isAnimationRunning = true;
-        if (animationioList != null && animationioList.size() == scenarioItemIndex) {
+        if (animationList != null && animationList.size() == scenarioItemIndex) {
             animationsCoordinator.showFinish();
             return;
         }
-        if (animationioList != null && !animationioList.isEmpty() && animationioList.size() > scenarioItemIndex) {
+        if (animationList != null && !animationList.isEmpty() && animationList.size() > scenarioItemIndex) {
 
-            AnimationScenarioItem animationStep = animationioList.get(scenarioItemIndex);
+            AnimationScenarioItem animationStep = animationList.get(scenarioItemIndex);
             scenarioItemIndex++;
             if (keyList != null && !keyList.isEmpty() && keyList.size() > scenarioItemIndex) {
                 int height = lineHeightArray.get(keyList.get(scenarioItemIndex));
@@ -232,6 +244,14 @@ public class SortFragment extends Fragment {
             mLlContainer.removeAllViews();
             mLlContainer.clearAnimation();
         }
+        if (mLlContainerMerge0 != null) {
+            mLlContainerMerge0.removeAllViews();
+            mLlContainerMerge0.clearAnimation();
+        }
+        if (mLlContainerMerge1 != null) {
+            mLlContainerMerge1.removeAllViews();
+            mLlContainerMerge1.clearAnimation();
+        }
 
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         int marginInPx = Util.dpToPx(getContext(), RECT_MARGIN);
@@ -244,8 +264,19 @@ public class SortFragment extends Fragment {
             rectView.setMinimumHeight(minHeight);//避免0等较小数值，没有高度
             rectView.setNumber(currentIntValue);
             rectView.setId(pos);
-            if (mLlContainer != null) {
-                mLlContainer.addView(rectView, lp);
+
+            if (algorithmSelected == Constant.ALGORITHM_MERGE) {
+                mLlContainerMerge0.addView(rectView, lp);
+                RectView rectView1 = new RectView(getContext());
+                rectView1.setImageBitmap(createCalculatedBitmap(currentIntValue));
+                rectView1.setMinimumHeight(minHeight);//避免0等较小数值，没有高度
+                rectView1.setNumber(currentIntValue);
+                rectView1.setId(pos);
+                mLlContainerMerge1.addView(rectView1, lp);
+            } else {
+                if (mLlContainer != null) {
+                    mLlContainer.addView(rectView, lp);
+                }
             }
             pos++;
         }

@@ -18,21 +18,21 @@ import pri.weiqiang.sortanimation.ui.customview.RectView;
 public class AnimationsCoordinator implements AlgorithmStepsInterface {
 
     private String TAG = AnimationsCoordinator.class.getSimpleName();
-    private ViewGroup bubblesContainer;
+    private ViewGroup container;
     private ArrayList<AlgorithmAnimationListener> listeners;
     private ValueAnimator blinkAnimation;
 
-    public AnimationsCoordinator(ViewGroup bubblesContainer) {
+    public AnimationsCoordinator(ViewGroup container) {
 //        Log.e(TAG, "AnimationsCoordinator");
-        this.bubblesContainer = bubblesContainer;
+        this.container = container;
     }
 
     @Override
     public void showSwapStep(final int curPosition, final int nextPosition, final boolean isOnFinalPlace) {
 //        Log.e(TAG, "showSwapStep");
-        if (bubblesContainer != null && bubblesContainer.getChildCount() > 0 && bubblesContainer.getChildCount() > nextPosition) {
-            final RectView curRectView = (RectView) bubblesContainer.getChildAt(curPosition);
-            final RectView nextRectView = (RectView) bubblesContainer.getChildAt(nextPosition);
+        if (container != null && container.getChildCount() > 0 && container.getChildCount() > nextPosition) {
+            final RectView curRectView = (RectView) container.getChildAt(curPosition);
+            final RectView nextRectView = (RectView) container.getChildAt(nextPosition);
 
             //BLINKING
             blinkAnimation = ValueAnimator.ofInt(0, 5);
@@ -60,10 +60,10 @@ public class AnimationsCoordinator implements AlgorithmStepsInterface {
                     curRectView.setSelected(false);
                     curRectView.setIsOnFinalPlace(isOnFinalPlace);
                     nextRectView.setSelected(false);
-                    bubblesContainer.removeView(curRectView);
-                    bubblesContainer.addView(curRectView, nextPosition);
-                    bubblesContainer.removeView(nextRectView);
-                    bubblesContainer.addView(nextRectView, curPosition);
+                    container.removeView(curRectView);
+                    container.addView(curRectView, nextPosition);
+                    container.removeView(nextRectView);
+                    container.addView(nextRectView, curPosition);
                     notifySwapStepAnimationEnd(curPosition);
                 }
             });
@@ -75,9 +75,9 @@ public class AnimationsCoordinator implements AlgorithmStepsInterface {
     @Override
     public void showNonSwapStep(final int curPosition, final int nextPosition, final boolean isOnFinalPlace) {
 //        Log.e(TAG, "showNonSwapStep");
-        if (bubblesContainer != null && bubblesContainer.getChildCount() > 0 && bubblesContainer.getChildCount() > nextPosition) {
-            final RectView curRectView = (RectView) bubblesContainer.getChildAt(curPosition);
-            final RectView nextRectView = (RectView) bubblesContainer.getChildAt(nextPosition);
+        if (container != null && container.getChildCount() > 0 && container.getChildCount() > nextPosition) {
+            final RectView curRectView = (RectView) container.getChildAt(curPosition);
+            final RectView nextRectView = (RectView) container.getChildAt(nextPosition);
 
             //BLINKING
             blinkAnimation = ValueAnimator.ofInt(0, 6);
@@ -114,13 +114,13 @@ public class AnimationsCoordinator implements AlgorithmStepsInterface {
     @Override
     public void showFinish() {
 //        Log.e(TAG, "showFinish");
-        if (bubblesContainer != null && bubblesContainer.getChildCount() > 0) {
-//            ((RectView) bubblesContainer.getChildAt(0)).setIsOnFinalPlace(true);//仅对冒泡法适用
-            for (int i = 0; i < bubblesContainer.getChildCount(); i++) {
-                ((RectView) bubblesContainer.getChildAt(i)).setIsOnFinalPlace(true);//排序完成后，全部设置为最终颜色
+        if (container != null && container.getChildCount() > 0) {
+//            ((RectView) container.getChildAt(0)).setIsOnFinalPlace(true);//仅对冒泡法适用
+            for (int i = 0; i < container.getChildCount(); i++) {
+                ((RectView) container.getChildAt(i)).setIsOnFinalPlace(true);//排序完成后，全部设置为最终颜色
             }
         }
-        Toast.makeText(bubblesContainer.getContext(), R.string.sort_finish, Toast.LENGTH_SHORT).show();
+        Toast.makeText(container.getContext(), R.string.sort_finish, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -129,7 +129,7 @@ public class AnimationsCoordinator implements AlgorithmStepsInterface {
         if (blinkAnimation != null) {
             blinkAnimation.removeAllListeners();
             blinkAnimation.cancel();
-            bubblesContainer.clearAnimation();
+            container.clearAnimation();
         }
     }
 
