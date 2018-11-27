@@ -3,38 +3,13 @@ package pri.weiqiang.sortanimation.algorithm;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
-import pri.weiqiang.sortanimation.common.AnimationScenarioItem;
+import pri.weiqiang.sortanimation.animation.AnimationScenarioItem;
+import pri.weiqiang.sortanimation.animation.MergeAnimationScenarioItem;
 
 public class SortArrayList {
 
     private static String TAG = SortArrayList.class.getSimpleName();
-
-    private static void binarySearch(int[] a) {
-
-        System.out.println("二分法查找");
-        int target = 80;
-        Arrays.sort(a);
-        boolean result = false;
-        int min = 0;
-        int b = 0;
-        int max = a.length - 1;
-        while (min <= max) {
-            b = (min + max) / 2;
-            if (target > a[b]) {
-                min = b + 1;
-            }
-            if (target < a[b]) {
-                max = b - 1;
-            }
-            if (target == a[b]) {
-                min++;
-                result = true;
-            }
-        }
-        System.out.println("result:" + result + ",b:" + b);
-    }
 
     // 冒泡 https://blog.csdn.net/csdn_aiyang/article/details/73108606
     public static void pubbleSort(ArrayList<Integer> unsortedValues, ArrayList<AnimationScenarioItem> animationioList) {
@@ -44,11 +19,7 @@ public class SortArrayList {
         int size = unsortedValues.size();
         for (int i = 0; i < size - 1; i++) {
             for (int j = 0; j < size - i - 1; j++) {
-                if (j == unsortedValues.size() - i - 2) {
-                    isLastInLoop = true;
-                } else {
-                    isLastInLoop = false;
-                }
+                isLastInLoop = (j == unsortedValues.size() - i - 2);
                 if (unsortedValues.get(j + 1) < unsortedValues.get(j)) {
                     temp = unsortedValues.get(j);
                     unsortedValues.set(j, unsortedValues.get(j + 1));
@@ -65,7 +36,6 @@ public class SortArrayList {
     // 插入排序 https://blog.csdn.net/csdn_aiyang/article/details/73108606
     public static void insertSort(ArrayList<Integer> unsortedValues, ArrayList<AnimationScenarioItem> animationioList) {
         Log.e(TAG, "插入排序!");
-        boolean isLastInLoop = false;//插入排序，直到最后排序完成后，才会得知是最后位置
         // 直接插入排序
         for (int i = 1; i < unsortedValues.size(); i++) {
             // 待插入元素
@@ -75,9 +45,10 @@ public class SortArrayList {
                 // 将大于temp的往后移动一位
                 if (unsortedValues.get(j) > temp) {
                     unsortedValues.set(j + 1, unsortedValues.get(j));
-                    animationioList.add(new AnimationScenarioItem(true, j, j + 1, isLastInLoop));
+                    //插入排序，直到最后排序完成后，才会得知是最后位置
+                    animationioList.add(new AnimationScenarioItem(true, j, j + 1, false));
                 } else {
-                    animationioList.add(new AnimationScenarioItem(false, j, j + 1, isLastInLoop));
+                    animationioList.add(new AnimationScenarioItem(false, j, j + 1, false));
                     break;
 
                 }
@@ -93,7 +64,7 @@ public class SortArrayList {
     public static void selectSort(ArrayList<Integer> unsortedValues, ArrayList<AnimationScenarioItem> animationioList) {
         Log.e(TAG, "选择排序");
         int min;
-        int tmp = 0;
+        int tmp;
         for (int i = 0; i < unsortedValues.size(); i++) {
             min = unsortedValues.get(i);
             for (int j = i + 1; j < unsortedValues.size(); j++) {
@@ -118,33 +89,32 @@ public class SortArrayList {
         int start = low;
         int end = high;
         int key = unsortedValues.get(start);
-        boolean isLastInLoop = false;
         while (end > start) {
 
             // 从后往前比较，如果没有比关键值小的，比较下一个，直到有比关键值小的交换位置，然后又从前往后比较
             while (end > start && unsortedValues.get(end) >= key) {
                 end--;
-                animationioList.add(new AnimationScenarioItem(false, start, end, isLastInLoop));
+                animationioList.add(new AnimationScenarioItem(false, start, end, false));
                 keyList.add(key);
             }
             if (unsortedValues.get(end) <= key) {
                 int temp = unsortedValues.get(end);
                 unsortedValues.set(end, unsortedValues.get(start));
                 unsortedValues.set(start, temp);
-                animationioList.add(new AnimationScenarioItem(true, start, end, isLastInLoop));
+                animationioList.add(new AnimationScenarioItem(true, start, end, false));
                 keyList.add(key);
             }
             // 从前往后比较，如果没有比关键值大的，比较下一个，直到有比关键值大的交换位置
             while (end > start && unsortedValues.get(start) <= key) {
                 start++;
-                animationioList.add(new AnimationScenarioItem(false, start, end, isLastInLoop));
+                animationioList.add(new AnimationScenarioItem(false, start, end, false));
                 keyList.add(key);
             }
             if (unsortedValues.get(start) >= key) {
                 int temp = unsortedValues.get(start);
                 unsortedValues.set(start, unsortedValues.get(end));
                 unsortedValues.set(end, temp);
-                animationioList.add(new AnimationScenarioItem(true, start, end, isLastInLoop));
+                animationioList.add(new AnimationScenarioItem(true, start, end, false));
                 keyList.add(key);
             }
             // 此时第一次循环比较结束，关键值的位置已经确定了。左边的值都比关键值小，右边的值都比关键值大，但是两边的顺序还有可能是不一样的，进行下面的递归调用
@@ -161,51 +131,57 @@ public class SortArrayList {
 
 
     // 归并算法 https://www.cnblogs.com/of-fanruice/p/7678801.html
-    public static void mergeSort(ArrayList<Integer> unsortedValues, int low, int high, ArrayList<AnimationScenarioItem> animationioList) {
+    public static void mergeSort(ArrayList<Integer> unsortedValues, int low, int high, ArrayList<MergeAnimationScenarioItem> mergeAnimationioList) {
         Log.e(TAG, "归并排序! mergeSort");
         int mid = (low + high) / 2;
-        Log.e(TAG, "mid:" + mid);
         if (low < high) {
-            mergeSort(unsortedValues, low, mid, animationioList);
-            mergeSort(unsortedValues, mid + 1, high, animationioList);
+            mergeSort(unsortedValues, low, mid, mergeAnimationioList);
+            mergeSort(unsortedValues, mid + 1, high, mergeAnimationioList);
             // 左右归并
-            merge(unsortedValues, low, mid, high, animationioList);
+            merge(unsortedValues, low, mid, high, mergeAnimationioList);
         }
     }
 
-    private static void merge(ArrayList<Integer> unsortedValues, int low, int mid, int high, ArrayList<AnimationScenarioItem> animationioList) {
+    private static void merge(ArrayList<Integer> unsortedValues, int low, int mid, int high, ArrayList<MergeAnimationScenarioItem> mergeAnimationioList) {
         ArrayList<Integer> temp = new ArrayList<>();
-        Log.e(TAG, "merge 归并temp.size():" + temp.size());
         int i = low;
         int j = mid + 1;
         int k = 0;
         // 把较小的数先移到新数组中
+        Log.e(TAG, "开始拆分");
         while (i <= mid && j <= high) {
-            Log.e(TAG, "子归并merge i:" + i + ",j:" + j);
+            Log.e(TAG, "子归并merge i:" + i + ":" + unsortedValues.get(i) + ",j:" + j + ":" + unsortedValues.get(j) + ",mid:" + mid);
             if (unsortedValues.get(i) < unsortedValues.get(j)) {
+                //选择原始数组中的较小值直接移动到新数组的最末位
+                mergeAnimationioList.add(new MergeAnimationScenarioItem(i, k, false));
                 temp.add(k++, unsortedValues.get(i++));
             } else {
+                mergeAnimationioList.add(new MergeAnimationScenarioItem(j, k, false));
                 temp.add(k++, unsortedValues.get(j++));
             }
         }
         // i<=mid是剩余全部中的较小的，把左边剩余的数移入数组
         while (i <= mid) {
+            mergeAnimationioList.add(new MergeAnimationScenarioItem(i, k, false));
             temp.add(k++, unsortedValues.get(i++));
         }
         // j <= high是剩余全部中的大的，把右边边剩余的数移入数组，所以在while (i <= mid) 执行
         while (j <= high) {
+            mergeAnimationioList.add(new MergeAnimationScenarioItem(j, k, false));
             temp.add(k++, unsortedValues.get(j++));
         }
         // 把新数组中的数覆盖nums数组
+        Log.e(TAG, "合并开始");
         for (int x = 0; x < temp.size(); x++) {
             unsortedValues.set(x + low, temp.get(x));
+            //返回原始数组
+            mergeAnimationioList.add(new MergeAnimationScenarioItem(x + low, x, true));
         }
     }
 
     // 希尔排序 https://blog.csdn.net/csdn_aiyang/article/details/73108606
     public static void heerSort(ArrayList<Integer> unsortedValues, ArrayList<AnimationScenarioItem> animationioList) {
         Log.e(TAG, "希尔排序");
-        boolean isLastInLoop = false;
         int d = unsortedValues.size() / 2;
         while (true) {
             for (int i = 0; i < d; i++) {
@@ -215,10 +191,10 @@ public class SortArrayList {
                         temp = unsortedValues.get(j);
                         unsortedValues.set(j, unsortedValues.get(j + d));
                         unsortedValues.set(j + d, temp);
-                        animationioList.add(new AnimationScenarioItem(true, j, j + d, isLastInLoop));
+                        animationioList.add(new AnimationScenarioItem(true, j, j + d, false));
 
                     } else {
-                        animationioList.add(new AnimationScenarioItem(false, j, j + d, isLastInLoop));
+                        animationioList.add(new AnimationScenarioItem(false, j, j + d, false));
                     }
                 }
             }
@@ -274,7 +250,7 @@ public class SortArrayList {
         }
     }
 
-    private static void logList(ArrayList<Integer> unsortedValues) {
+    public static void logList(ArrayList<Integer> unsortedValues) {
         StringBuffer stringBuffer = new StringBuffer();
         for (int i = 0; i < unsortedValues.size(); i++) {
             stringBuffer.append(unsortedValues.get(i) + ",");

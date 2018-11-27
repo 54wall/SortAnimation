@@ -2,6 +2,9 @@ package pri.weiqiang.sortanimation.algorithm;
 
 import java.util.Arrays;
 
+/**
+ * 数组的排序
+ */
 public class Sort {
     static int[] a8 = {40, 60, 30, 80, 50, 20, 90, 20, 10, 70};
     static int[] a7 = {6, 22, 2, 1, 0, 5, 4};

@@ -1,4 +1,4 @@
-package pri.weiqiang.sortanimation.common;
+package pri.weiqiang.sortanimation.animation;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -29,7 +29,7 @@ public class AnimationsCoordinator implements AlgorithmStepsInterface {
 
     @Override
     public void showSwapStep(final int curPosition, final int nextPosition, final boolean isOnFinalPlace) {
-//        Log.e(TAG, "showSwapStep");
+//        Log.e(TAG, "createTempView");
         if (container != null && container.getChildCount() > 0 && container.getChildCount() > nextPosition) {
             final RectView curRectView = (RectView) container.getChildAt(curPosition);
             final RectView nextRectView = (RectView) container.getChildAt(nextPosition);
@@ -74,7 +74,7 @@ public class AnimationsCoordinator implements AlgorithmStepsInterface {
 
     @Override
     public void showNonSwapStep(final int curPosition, final int nextPosition, final boolean isOnFinalPlace) {
-//        Log.e(TAG, "showNonSwapStep");
+//        Log.e(TAG, "mergeOriginalView");
         if (container != null && container.getChildCount() > 0 && container.getChildCount() > nextPosition) {
             final RectView curRectView = (RectView) container.getChildAt(curPosition);
             final RectView nextRectView = (RectView) container.getChildAt(nextPosition);

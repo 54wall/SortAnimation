@@ -74,21 +74,22 @@ public class RectView extends AppCompatImageView {
         }
     }
 
+    public Integer getNumber() {
+        return valueToDraw;
+    }
 
     /**
      * 在矩形中绘制相应数字
      *
-     * @param numberValueToDraw value which should appears in the center of {@link RectView}
+     * @param valueToDraw value which should appears in the center of {@link RectView}
      */
-    public void setNumber(Integer numberValueToDraw) {
-        valueToDraw = numberValueToDraw;
+    public void setNumber(Integer valueToDraw) {
+        this.valueToDraw = valueToDraw;
         invalidate();
     }
 
     /**
      * 矩形位于排序的最后位置，背景颜色将会置为最终颜色
-     *
-     * @param isOnFinalPlace
      */
     public void setIsOnFinalPlace(boolean isOnFinalPlace) {
         this.isOnFinalPlace = isOnFinalPlace;
@@ -98,8 +99,6 @@ public class RectView extends AppCompatImageView {
 
     /**
      * 处于比较中的矩形，背景颜色处于选中状态
-     *
-     * @param isSelected
      */
     public void setSelected(boolean isSelected) {
         this.isSelected = isSelected;

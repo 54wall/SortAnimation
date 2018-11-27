@@ -1,4 +1,4 @@
-package pri.weiqiang.sortanimation.common;
+package pri.weiqiang.sortanimation.animation;
 
 /**
  * Holds data about what kind of animation should be shown.

@@ -1,8 +1,6 @@
 package pri.weiqiang.sortanimation.ui.fragment;
 
 import android.graphics.Bitmap;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,9 +22,12 @@ import java.util.ArrayList;
 
 import pri.weiqiang.sortanimation.R;
 import pri.weiqiang.sortanimation.algorithm.SortArrayList;
-import pri.weiqiang.sortanimation.common.AlgorithmAnimationListener;
-import pri.weiqiang.sortanimation.common.AnimationScenarioItem;
-import pri.weiqiang.sortanimation.common.AnimationsCoordinator;
+import pri.weiqiang.sortanimation.animation.AlgorithmAnimationListener;
+import pri.weiqiang.sortanimation.animation.AnimationScenarioItem;
+import pri.weiqiang.sortanimation.animation.AnimationsCoordinator;
+import pri.weiqiang.sortanimation.animation.MergeAnimationListener;
+import pri.weiqiang.sortanimation.animation.MergeAnimationScenarioItem;
+import pri.weiqiang.sortanimation.animation.MergeAnimationsCoordinator;
 import pri.weiqiang.sortanimation.constant.Constant;
 import pri.weiqiang.sortanimation.ui.customview.RectView;
 import pri.weiqiang.sortanimation.util.Util;
@@ -38,8 +39,9 @@ import pri.weiqiang.sortanimation.util.Util;
 public class SortFragment extends Fragment {
     public static final int minHeight = 150;
     public static final int RECT_MARGIN = 1;//4
+    public static SparseIntArray lineHeightArray = new SparseIntArray();//统计每个数字对应矩形的高
+    public static int mRectWidth;//单个长方体的宽
     private LinearLayout viewLine;
-    private SparseIntArray lineHeightArray = new SparseIntArray();
     private String TAG = SortFragment.class.getSimpleName();
     private EditText mEtInput;
     private Button mBtnStart;
@@ -47,11 +49,13 @@ public class SortFragment extends Fragment {
     private int scenarioItemIndex = 0;
     private LinearLayout mLlContainer;
     private LinearLayout mLlContainerMerge;
-    private LinearLayout mLlContainerMerge0;
-    private LinearLayout mLlContainerMerge1;
+    private LinearLayout mLlContainerOriginal;
+    private LinearLayout mLlContainerTemp;
     private RelativeLayout mRlContainerParent;
     private AnimationsCoordinator animationsCoordinator;
+    private MergeAnimationsCoordinator mergeAnimationsCoordinator;
     private ArrayList<AnimationScenarioItem> animationList;
+    private ArrayList<MergeAnimationScenarioItem> mergeAnimationList;
     private ArrayList<Integer> keyList;
     private Spinner algorithmSpinner;
     private int algorithmSelected = Constant.ALGORITHM_PUBBLE;
@@ -69,7 +73,7 @@ public class SortFragment extends Fragment {
             String input = mEtInput.getText().toString();
             if (!TextUtils.isEmpty(input)) {
                 resetPreviousData();
-                animationList = new ArrayList<>();
+
                 ArrayList<Integer> integerList = new ArrayList<>(Util.convertToIntArray(input));
                 //更新数据，minRectHeight maxRectHeight 同步重置
                 minRectHeight = integerList.get(0);
@@ -85,14 +89,35 @@ public class SortFragment extends Fragment {
                     }
                 }
                 rectCount = integerList.size();
-                drawRects(integerList);
-                sort(integerList, animationList);
-                runAnimationIteration();
+
+                if (algorithmSelected == Constant.ALGORITHM_MERGE) {
+                    drawRectsMerge(integerList);
+                    mergeAnimationList = new ArrayList<>();
+                    sortMerge(integerList, mergeAnimationList);
+                    runAnimationIterationMerge();
+                } else {
+                    drawRects(integerList);
+                    animationList = new ArrayList<>();
+                    sort(integerList, animationList);
+                    runAnimationIteration();
+                }
+                stringBuffer = new StringBuffer();
+                for (int i = 0; i < integerList.size(); i++) {
+                    stringBuffer.append(integerList.get(i) + ",");
+                }
+                Log.e(TAG, "排序后:" + stringBuffer);
+
             } else {
                 Toast.makeText(getContext(), R.string.empty_field_warning, Toast.LENGTH_LONG).show();
             }
         }
     };
+
+    private void sortMerge(ArrayList<Integer> unsortedValues, ArrayList<MergeAnimationScenarioItem> mergeAnimationioList) {
+        mRlContainerParent.setVisibility(View.GONE);
+        mLlContainerMerge.setVisibility(View.VISIBLE);
+        SortArrayList.mergeSort(unsortedValues, 0, unsortedValues.size() - 1, mergeAnimationioList);
+    }
 
     private void sort(ArrayList<Integer> unsortedValues, ArrayList<AnimationScenarioItem> animationioList) {
         mRlContainerParent.setVisibility(View.VISIBLE);
@@ -112,11 +137,6 @@ public class SortFragment extends Fragment {
                 keyList = new ArrayList<>();
                 SortArrayList.quickSort(unsortedValues, 0, unsortedValues.size() - 1, animationioList, keyList);
                 break;
-            case Constant.ALGORITHM_MERGE:
-                mRlContainerParent.setVisibility(View.GONE);
-                mLlContainerMerge.setVisibility(View.VISIBLE);
-                SortArrayList.mergeSort(unsortedValues, 0, unsortedValues.size() - 1, animationioList);
-                break;
             case Constant.ALGORITHM_HEER:
                 SortArrayList.heerSort(unsortedValues, animationioList);
                 break;
@@ -125,11 +145,7 @@ public class SortFragment extends Fragment {
                 break;
 
         }
-        stringBuffer = new StringBuffer();
-        for (int i = 0; i < unsortedValues.size(); i++) {
-            stringBuffer.append(unsortedValues.get(i) + ",");
-        }
-        Log.e(TAG, "排序结束后:" + stringBuffer);
+
     }
 
     private void resetPreviousData() {
@@ -147,7 +163,7 @@ public class SortFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@Nullable LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.e(TAG, "onCreateView");
         view = inflater.inflate(R.layout.fragment_sort, container, false);
         mEtInput = view.findViewById(R.id.et_input);
@@ -193,18 +209,24 @@ public class SortFragment extends Fragment {
         mLlContainer = view.findViewById(R.id.ll_container);
         mRlContainerParent = view.findViewById(R.id.rl_container_parent);
         mLlContainerMerge = view.findViewById(R.id.ll_container_merge);
-        mLlContainerMerge0 = view.findViewById(R.id.ll_container_merge_0);
-        mLlContainerMerge1 = view.findViewById(R.id.ll_container_merge_1);
-
-        mLlContainer = view.findViewById(R.id.ll_container);
+        mLlContainerOriginal = view.findViewById(R.id.ll_container_original);
+        mLlContainerTemp = view.findViewById(R.id.ll_container_temp);
         mWidth = view.getMeasuredWidth();
         mRectHeight = view.getMeasuredHeight();
         animationsCoordinator = new AnimationsCoordinator(mLlContainer);
         animationsCoordinator.addListener(new AlgorithmAnimationListener() {
             @Override
             public void onSwapStepAnimationEnd(int endedPosition) {
-//                Log.e(TAG, "addListener AlgorithmAnimationListener:runAnimationIteration!!!!");
+                Log.e(TAG, "addListener AlgorithmAnimationListener:runAnimationIteration!!!!");
                 runAnimationIteration();
+            }
+        });
+        mergeAnimationsCoordinator = new MergeAnimationsCoordinator(getActivity(), mLlContainerOriginal, mLlContainerTemp);
+        mergeAnimationsCoordinator.addListener(new MergeAnimationListener() {
+            @Override
+            public void onSwapStepAnimationEnd(int endedPosition) {
+                Log.e(TAG, "addListener AlgorithmAnimationListener:runAnimationIteration!!!!");
+                runAnimationIterationMerge();
             }
         });
         return view;
@@ -238,45 +260,47 @@ public class SortFragment extends Fragment {
 
     }
 
+    private void runAnimationIterationMerge() {
+        Log.e(TAG, "runAnimationIterationMerge");
+        isAnimationRunning = true;
+        if (mergeAnimationList != null && mergeAnimationList.size() == scenarioItemIndex) {
+            mergeAnimationsCoordinator.showFinish();
+            return;
+        }
+        if (mergeAnimationList != null && !mergeAnimationList.isEmpty() && mergeAnimationList.size() > scenarioItemIndex) {
+
+            MergeAnimationScenarioItem mergeAnimationStep = mergeAnimationList.get(scenarioItemIndex);
+            scenarioItemIndex++;
+            if (mergeAnimationStep.isMerge()) {
+                mergeAnimationsCoordinator.mergeOriginalView(mergeAnimationStep.getOriginalPosition(), mergeAnimationStep.getTempPosition(), true);
+            } else {
+                mergeAnimationsCoordinator.createTempView(mergeAnimationStep.getOriginalPosition(), mergeAnimationStep.getTempPosition(), false);
+            }
+        }
+
+    }
+
     private void drawRects(ArrayList<Integer> listToDraw) {
         Log.e(TAG, "drawRects");
         if (mLlContainer != null) {
             mLlContainer.removeAllViews();
             mLlContainer.clearAnimation();
         }
-        if (mLlContainerMerge0 != null) {
-            mLlContainerMerge0.removeAllViews();
-            mLlContainerMerge0.clearAnimation();
-        }
-        if (mLlContainerMerge1 != null) {
-            mLlContainerMerge1.removeAllViews();
-            mLlContainerMerge1.clearAnimation();
-        }
 
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         int marginInPx = Util.dpToPx(getContext(), RECT_MARGIN);
         lp.setMargins(0, 0, marginInPx, 0);
         int pos = 0;
-
+        mWidth = view.getMeasuredWidth();
+        mRectWidth = mWidth / rectCount - RECT_MARGIN;
         for (Integer currentIntValue : listToDraw) {
             RectView rectView = new RectView(getContext());
-            rectView.setImageBitmap(createCalculatedBitmap(currentIntValue));
+            rectView.setImageBitmap(createCalculatedBitmap(mRectWidth, currentIntValue));
             rectView.setMinimumHeight(minHeight);//避免0等较小数值，没有高度
             rectView.setNumber(currentIntValue);
             rectView.setId(pos);
-
-            if (algorithmSelected == Constant.ALGORITHM_MERGE) {
-                mLlContainerMerge0.addView(rectView, lp);
-                RectView rectView1 = new RectView(getContext());
-                rectView1.setImageBitmap(createCalculatedBitmap(currentIntValue));
-                rectView1.setMinimumHeight(minHeight);//避免0等较小数值，没有高度
-                rectView1.setNumber(currentIntValue);
-                rectView1.setId(pos);
-                mLlContainerMerge1.addView(rectView1, lp);
-            } else {
-                if (mLlContainer != null) {
-                    mLlContainer.addView(rectView, lp);
-                }
+            if (mLlContainer != null) {
+                mLlContainer.addView(rectView, lp);
             }
             pos++;
         }
@@ -291,23 +315,46 @@ public class SortFragment extends Fragment {
         }
     }
 
+    private void drawRectsMerge(ArrayList<Integer> listToDraw) {
+        Log.e(TAG, "drawRectsMerge");
+        if (mLlContainerOriginal != null) {
+            mLlContainerOriginal.removeAllViews();
+            mLlContainerOriginal.clearAnimation();
+        }
+        if (mLlContainerTemp != null) {
+            mLlContainerTemp.removeAllViews();
+            mLlContainerTemp.clearAnimation();
+        }
+
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        int marginInPx = Util.dpToPx(getContext(), RECT_MARGIN);
+        lp.setMargins(0, 0, marginInPx, 0);
+        int pos = 0;
+        mWidth = view.getMeasuredWidth();
+        mRectWidth = mWidth / rectCount - RECT_MARGIN;
+        for (Integer currentIntValue : listToDraw) {
+            RectView rectView = new RectView(getContext());
+            rectView.setImageBitmap(createCalculatedBitmap(mRectWidth, currentIntValue));
+            rectView.setMinimumHeight(minHeight);//避免0等较小数值，没有高度
+            rectView.setNumber(currentIntValue);
+            rectView.setId(pos);
+            mLlContainerOriginal.addView(rectView, lp);
+            pos++;
+        }
+    }
+
     /**
      * Calculates size of ImageView which would be generated with current text value.
      *
      * @param currentIntValue
      * @return empty bitmap with calculated size
      */
-    private Bitmap createCalculatedBitmap(Integer currentIntValue) {
-        mWidth = view.getMeasuredWidth();
+    private Bitmap createCalculatedBitmap(int mRectWidth, Integer currentIntValue) {
         //maxRectHeight-minRectHeight+1:+1 是因为计算的是距离，否则最高的矩形还是会超出屏幕，minRectHeight即minIntValue
         //4/5 是为了使最高高度不超出屏幕，否则当最大值为比较的关键值时，快拍的关键字线viewLine将超出视野，
         mRectHeight = view.getMeasuredHeight() * 4 / 5 * (currentIntValue - minRectHeight) / (maxRectHeight - minRectHeight + 1) + 1;
         lineHeightArray.put(currentIntValue, mRectHeight);
-        final Rect bounds = new Rect();
-        Paint paint = new Paint(Paint.LINEAR_TEXT_FLAG);
-        paint.setTextSize(RectView.TEXT_SIZE);
-        paint.getTextBounds(currentIntValue.toString(), 0, currentIntValue.toString().length(), bounds);
-        return Bitmap.createBitmap(mWidth / rectCount - RECT_MARGIN, mRectHeight, Bitmap.Config.ALPHA_8);
+        return Bitmap.createBitmap(mRectWidth, mRectHeight, Bitmap.Config.ALPHA_8);
     }
 
 }
