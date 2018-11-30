@@ -205,7 +205,7 @@ public class SortFragment extends Fragment {
 
             }
         });
-        algorithmSpinner.setSelection(Constant.ALGORITHM_MERGE, true);
+        algorithmSpinner.setSelection(Constant.ALGORITHM_PUBBLE, true);
         mLlContainer = view.findViewById(R.id.ll_container);
         mRlContainerParent = view.findViewById(R.id.rl_container_parent);
         mLlContainerMerge = view.findViewById(R.id.ll_container_merge);

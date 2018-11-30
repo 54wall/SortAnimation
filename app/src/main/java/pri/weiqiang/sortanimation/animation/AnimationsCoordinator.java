@@ -3,6 +3,7 @@ package pri.weiqiang.sortanimation.animation;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
@@ -23,20 +24,20 @@ public class AnimationsCoordinator implements AlgorithmStepsInterface {
     private ValueAnimator blinkAnimation;
 
     public AnimationsCoordinator(ViewGroup container) {
-//        Log.e(TAG, "AnimationsCoordinator");
+        Log.e(TAG, "AnimationsCoordinator");
         this.container = container;
     }
 
     @Override
     public void showSwapStep(final int curPosition, final int nextPosition, final boolean isOnFinalPlace) {
-//        Log.e(TAG, "createTempView");
+        Log.e(TAG, "showSwapStep");
         if (container != null && container.getChildCount() > 0 && container.getChildCount() > nextPosition) {
             final RectView curRectView = (RectView) container.getChildAt(curPosition);
             final RectView nextRectView = (RectView) container.getChildAt(nextPosition);
 
             //BLINKING
             blinkAnimation = ValueAnimator.ofInt(0, 5);
-            blinkAnimation.setDuration(2000);
+            blinkAnimation.setDuration(1500);
             blinkAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
@@ -74,19 +75,18 @@ public class AnimationsCoordinator implements AlgorithmStepsInterface {
 
     @Override
     public void showNonSwapStep(final int curPosition, final int nextPosition, final boolean isOnFinalPlace) {
-//        Log.e(TAG, "mergeOriginalView");
+        Log.e(TAG, "showNonSwapStep");
         if (container != null && container.getChildCount() > 0 && container.getChildCount() > nextPosition) {
             final RectView curRectView = (RectView) container.getChildAt(curPosition);
             final RectView nextRectView = (RectView) container.getChildAt(nextPosition);
 
             //BLINKING
             blinkAnimation = ValueAnimator.ofInt(0, 6);
-            blinkAnimation.setDuration(1500);
+            blinkAnimation.setDuration(1200);
             blinkAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
                     int value = (Integer) animation.getAnimatedValue();
-//                    Log.e(TAG,"!!!howNonSwapStep onAnimationUpdate value:"+value);
                     if (value % 2 == 0) {
                         curRectView.setSelected(false);
                         nextRectView.setSelected(false);
@@ -113,7 +113,7 @@ public class AnimationsCoordinator implements AlgorithmStepsInterface {
 
     @Override
     public void showFinish() {
-//        Log.e(TAG, "showFinish");
+        Log.e(TAG, "showFinish");
         if (container != null && container.getChildCount() > 0) {
 //            ((RectView) container.getChildAt(0)).setIsOnFinalPlace(true);//仅对冒泡法适用
             for (int i = 0; i < container.getChildCount(); i++) {
@@ -125,7 +125,7 @@ public class AnimationsCoordinator implements AlgorithmStepsInterface {
 
     @Override
     public void cancelAllVisualisations() {
-//        Log.e(TAG, "cancelAllVisualisations");
+        Log.e(TAG, "cancelAllVisualisations");
         if (blinkAnimation != null) {
             blinkAnimation.removeAllListeners();
             blinkAnimation.cancel();
@@ -134,7 +134,7 @@ public class AnimationsCoordinator implements AlgorithmStepsInterface {
     }
 
     private void notifySwapStepAnimationEnd(int position) {
-//        Log.e(TAG, "notifySwapStepAnimationEnd");
+        Log.e(TAG, "notifySwapStepAnimationEnd");
         if (listeners != null && !listeners.isEmpty()) {
             int numListeners = listeners.size();
             for (int i = 0; i < numListeners; ++i) {
@@ -144,7 +144,7 @@ public class AnimationsCoordinator implements AlgorithmStepsInterface {
     }
 
     public void addListener(AlgorithmAnimationListener listener) {
-//        Log.e(TAG, "addListener");
+        Log.e(TAG, "addListener");
         if (listeners == null) {
             listeners = new ArrayList<>();
         }
@@ -152,7 +152,7 @@ public class AnimationsCoordinator implements AlgorithmStepsInterface {
     }
 
     public void removeListener(Animator.AnimatorListener listener) {
-//        Log.e(TAG, "removeListener");
+        Log.e(TAG, "removeListener");
         if (listeners == null) {
             return;
         }

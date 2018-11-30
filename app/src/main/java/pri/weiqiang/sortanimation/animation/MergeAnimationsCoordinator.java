@@ -60,7 +60,7 @@ public class MergeAnimationsCoordinator implements MergeStepsInterface {
             final RectView originalView = (RectView) originalContainer.getChildAt(originalPosition);
             //BLINKING
             blinkAnimation = ValueAnimator.ofInt(0, 5);
-            blinkAnimation.setDuration(2000);
+            blinkAnimation.setDuration(1500);
             blinkAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
@@ -119,7 +119,7 @@ public class MergeAnimationsCoordinator implements MergeStepsInterface {
             final RectView tempRectView = (RectView) tempContainer.getChildAt(tempPosition);
             //BLINKING
             blinkAnimation = ValueAnimator.ofInt(0, 6);
-            blinkAnimation.setDuration(1500);
+            blinkAnimation.setDuration(1200);
             blinkAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {

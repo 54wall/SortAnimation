@@ -3,7 +3,7 @@ package pri.weiqiang.sortanimation.algorithm;
 import java.util.Arrays;
 
 /**
- * 数组的排序
+ * 数组的排序，用于理解各个排序,java debug运行可以查看变量变化
  */
 public class Sort {
     static int[] a8 = {40, 60, 30, 80, 50, 20, 90, 20, 10, 70};
