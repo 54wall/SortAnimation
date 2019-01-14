@@ -37,7 +37,7 @@ public class AnimationsCoordinator implements AlgorithmStepsInterface {
 
             //BLINKING
             blinkAnimation = ValueAnimator.ofInt(0, 5);
-            blinkAnimation.setDuration(1500);
+            blinkAnimation.setDuration(1000);
             blinkAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {

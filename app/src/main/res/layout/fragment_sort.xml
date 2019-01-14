@@ -21,7 +21,7 @@
             android:layout_weight="3"
             android:digits="0123456789,"
             android:maxLines="3"
-            android:text="5,4,3,2,1,0" />
+            android:text="3,2,5,4,1" />
 
         <Spinner
             android:id="@+id/spinner_algorithm"

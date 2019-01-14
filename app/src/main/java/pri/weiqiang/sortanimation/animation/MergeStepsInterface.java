@@ -7,7 +7,7 @@ package pri.weiqiang.sortanimation.animation;
 public interface MergeStepsInterface {
 
     /**
-     * 从原数组中选择元素组成型数组，值从小到大
+     * 从原数组中选择元素组成新数组，顺序为从小到大
      *
      * @param originalPosition 在原数组中的位置
      * @param tempPosition     在新生成的数组中的位置
