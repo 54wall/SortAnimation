@@ -1,14 +1,23 @@
-# SortAnimation
 ## 前言
-文章中仅展示关键代码用来说明思路，全部代码请移步：[54wall/SortAnimation](https://github.com/54wall/SortAnimation)
+最近在学习基础的排序算法，发现仅凭算法的定义公式，即使结合代码在IDE下debug查看数组变化，也依然不是很好的理解，于是就在网上搜索排序算法动画，果然已经有人实现了排序演示，有java实现的，有JS实现，但很想在android手机上看简单演示，最终找到了，[ukhanoff/AndroidSortAnimation](https://github.com/ukhanoff/AndroidSortAnimation)，一个国际友人，用android实现了基础的冒泡排序法。（左边为他的实现效果，右侧为我的实现效果）
 
-最近在学习基础的排序算法，发现仅凭算法的定义公式，即使结合代码在IDE下debug看数组的变化，也依然不是很高理解，于是就在网上搜索排序算法动画，果然已经有人实现了排序演示，有java实现的，有JS实现，但很想在android手机上看简单演示，最终找到了，[ukhanoff/AndroidSortAnimation](https://github.com/ukhanoff/AndroidSortAnimation)，一个国际友人，用android实现了基础的冒泡排序法。
+<img src="screenshot/bubble_ukhanoff.gif" width="32%"> <img src="screenshot/pubble.gif" width="32%">
 
+在这之前，我也尝试过使用RecycleView或者自定义View实现类似效果，但依然还是败下阵来，在参考[ukhanoff/AndroidSortAnimation](https://github.com/ukhanoff/AndroidSortAnimation)后，我增加了其他几种排序算法动画，同时将上边的自定义图形，从球形设置成了长方体，动画效果将和[liusaint/sortAnimation](https://github.com/liusaint/sortAnimation)
+以及[在线动画演示各种排序算法过程 - aTool在线工具](http://www.atool.org/sort.php)两种JS实现效果相一致，达到了相对预期的效果，排序算法分别包括包含冒泡、插入、选择、快速、归并、希尔、堆排序。
 
-在这之前，我也尝试过使用RecycleView或者自定义View实现类似效果，但依然还是败下阵来，在参考[ukhanoff/AndroidSortAnimation](https://github.com/ukhanoff/AndroidSortAnimation)后，我增加了其他几种排序算法动画，同时将上边的自定义图形，从球形设置成了长方体，动画效果将和Web上相一致，已经达到了本人预期的效果。接下来，我将分享下android平台下，如何实现排序动画。
+<img src="screenshot/heap.gif" width="32%"> <img src="screenshot/heer.gif" width="32%"> <img src="screenshot/insert.gif" width="32%">
+<img src="screenshot/merge.gif" width="32%"> <img src="screenshot/quick.gif" width="32%"> <img src="screenshot/select.gif" width="32%">
+接下来，我将分享下android平台下，如何实现排序动画。
+##### 备注：文章中仅展示关键代码用来说明思路，全部代码请移步：[54wall/SortAnimation](https://github.com/54wall/SortAnimation)
+
 首先大概讲解下大神[ukhanoff](https://github.com/ukhanoff/AndroidSortAnimation)
 ，参考将大象被装到冰箱，他是如何实现的冒泡排序法。
-他主要用到了三个基础知识：1自定义View 2Android属性动画之ValueAnimator 3ViewGroup中addView与removeView,接下来展开来谈：
+他主要用到了三个基础知识：
+#### 自定义View 
+#### Android属性动画之ValueAnimator 
+#### ViewGroup中addView与removeView
+接下来分步骤展开说明下
 ### 借助自定义View实现可以变色的小球
 自定义BubbleView继承AppCompatImageView，新增设置小球处于选中状态，复写onDraw()等方法代码如下：
 ```java
@@ -209,7 +218,7 @@ AnimationsCoordinator除了实现AlgorithmStepsInterface接口外，在构造函
 }
 ```
 这样便获得了全部的小球，在结合之前的属性动画ValueAnimator,利用ViewGroup的removeView和addView，通过增加子View，移除子View,这样看起来就像是小球实现了移动一样。
-```
+```java
             blinkAnimation.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {//
@@ -227,7 +236,7 @@ AnimationsCoordinator除了实现AlgorithmStepsInterface接口外，在构造函
             blinkAnimation.start();
 ```
 最后还有小球的每次移动都要记录在animationioList，有了小球移动的历史记录，就可以让小球听话的按照冒泡排序法动起来了。
-```
+```java
     private ArrayList<Integer> generateSortScenario(ArrayList<Integer> unsortedValues) {
         Log.e(TAG, "generateSortScenario");
         ArrayList<Integer> values = new ArrayList<>(unsortedValues);
@@ -296,7 +305,7 @@ public interface MergeStepsInterface {
 
 ```
 MergeAnimationsCoordinator实现MergeStepsInterface接口，因为归并需要两个ViewGroup来容纳新生成的数组，所以相应的构造函数要做出改变；
-```
+```java
     public MergeAnimationsCoordinator(Context context, ViewGroup originalContainer, ViewGroup tempContainer) {
         Log.e(TAG, "MergeAnimationsCoordinator");
         this.context = context;
@@ -305,7 +314,7 @@ MergeAnimationsCoordinator实现MergeStepsInterface接口，因为归并需要�
 	}
 ```
 而相应的createTempView和mergeOriginalView方法分别如下：
-```
+```java
     /**
      * 从原数组拿取元素，按大小添加下方的新矩形数列中
      *
@@ -431,7 +440,7 @@ MergeAnimationsCoordinator实现MergeStepsInterface接口，因为归并需要�
 我这里为了保证建立好的ViewGroup中移除的后产生的空白，使用了高度为1的长方体占位来实现，这里特别说明一下。
 ### 记录归并算法每次比较元素
 这个还是有些难度的，我基本是靠试错，试出来。代码如下：
-```
+```java
     // 归并算法 https://www.cnblogs.com/of-fanruice/p/7678801.html
     public static void mergeSort(ArrayList<Integer> unsortedValues, int low, int high, ArrayList<MergeAnimationScenarioItem> mergeAnimationioList) {
         Log.e(TAG, "归并排序! mergeSort");
@@ -483,17 +492,11 @@ MergeAnimationsCoordinator实现MergeStepsInterface接口，因为归并需要�
 ```
 
 ### 自定义长方体RectView
-略。
+略。详情[54wall/SortAnimation](https://github.com/54wall/SortAnimation)
 
-## 前言
-SortAnimation实现了android平台下的动画效果，包含冒泡、插入、选择、快速、归并、希尔、堆排序。最初由[ukhanoff/AndroidSortAnimation](https://github.com/ukhanoff/AndroidSortAnimation)更改完成，其使用小球实现了冒泡排序，我则参考
-[在线动画演示各种排序算法过程 - aTool在线工具](http://www.atool.org/sort.php)、[liusaint/sortAnimation](https://github.com/liusaint/sortAnimation)的动画效果实现了Android端的排序动画。
 
-## 效果图
 
-<img src="screenshot/screenshot_0.png" width="32%"> <img src="screenshot/screenshot_1.png" width="32%"> <img src="screenshot/screenshot_2.png" width="32%">
-
-## Forked
+## Forked & Thanks
 
 - [ukhanoff/AndroidSortAnimation](https://github.com/ukhanoff/AndroidSortAnimation)
 - [liusaint/sortAnimation](https://github.com/liusaint/sortAnimation)
