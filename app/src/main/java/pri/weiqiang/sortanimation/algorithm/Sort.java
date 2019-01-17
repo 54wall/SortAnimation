@@ -7,7 +7,7 @@ import java.util.Arrays;
  */
 public class Sort {
     static int[] a8 = {40, 60, 30, 80, 50, 20, 90, 20, 10, 70};
-    static int[] a7 = {6, 22, 2, 1, 0, 5, 4};
+    static int[] a7 = {3, 2, 1};
     static int[] a5 = {22, 3, 2, 1, 0, 5, 4};
     static int[] a4 = {22, 3, 2, 1, 0, 5, 4};
     static int[] a3 = {22, 3, 2, 1, 0, 5, 4};
@@ -20,20 +20,22 @@ public class Sort {
     // 直接在Debug下查看数组变化，特别容易理解
     public static void main(String[] args) {
 
-        quickSort(a6, 0, a6.length - 1);
+//        quickSort(a6, 0, a6.length - 1);
 //		memeryArray(a, a.length, b, b.length, c);
 //		sort(a1, 0, a1.length-1);
 //		selectSort(a3);
 //		pubbleSort(a4);
 //		InsertSort(a5);
-//		HeerSort(a7);
+        HeerSort(a7);
+        shellSort(a7);
+        sort(a7);
 //		HeapSort.sortHeap();
         //查找
 //		binarySearch(a8);
         System.out.println("Finished……");
     }
 
-    // 希尔排序 https://blog.csdn.net/csdn_aiyang/article/details/73108606
+
     private static void binarySearch(int[] a) {
 
         System.out.println("二分法查找");
@@ -61,10 +63,39 @@ public class Sort {
         System.out.println("result:" + result + ",b:" + b);
     }
 
+    //正确 https://www.cnblogs.com/zengzhihua/p/4456734.html
+    public static void shellSort(int[] a) {
+        System.out.println("希尔排序");
+        int n = a.length;
+        int d = n / 2;
+        while (d > 0) {
+            for (int i = d; i < n; i++) {
+                int j = i - d;
+                while (j >= 0 && a[j] > a[j + d]) {
+                    int tmp = a[j];
+                    a[j] = a[j + d];
+                    a[j + d] = tmp;
+                    j = j - d;
+                }
+            }
+            d = d / 2;
+        }
+        for (int o : a) {
+            System.out.print(o + ",");
+        }
+    }
+
+    //    static int[] a7 = {3, 2, 5, 4,1}; 错误 排序后的结果为2 1 3 4 5
     // 希尔排序 https://blog.csdn.net/csdn_aiyang/article/details/73108606
+    @Deprecated
     private static void HeerSort(int[] a) {
         System.out.println("希尔排序");
         int d = a.length / 2;
+        //判断是否为基数 a%2！=0
+        if ((a.length & 1) == 1) {
+            System.out.println("数组大小为奇数 间隔需要+1 否则循环将少一次 排序将错误");
+            d++;
+        }
         while (true) {
             for (int i = 0; i < d; i++) {
                 for (int j = i; j + d < a.length; j += d) {
@@ -76,13 +107,38 @@ public class Sort {
                     }
                 }
             }
-            if (d == 1) {
+
+            if (d < 1) {
                 break;
             }
             d--;
         }
-        for (int q = 0; q < a.length; q++) {
-            System.out.print(a[q] + ",");
+        for (int o : a) {
+            System.out.print(o + ",");
+        }
+
+    }
+
+    //正确 https://www.cnblogs.com/LeslieXia/p/5814571.html
+    public static void sort(int[] arr) {
+        System.out.println("希尔排序 new");
+        // i表示希尔排序中的第n/2+1个元素（或者n/4+1）
+        // j表示希尔排序中从0到n/2的元素（n/4）
+        // r表示希尔排序中n/2+1或者n/4+1的值
+        int i, j, r, tmp;
+        // 划组排序
+        for (r = arr.length / 2; r >= 1; r = r / 2) {
+            for (i = r; i < arr.length; i++) {
+                tmp = arr[i];
+                j = i - r;
+                // 一轮排序
+                while (j >= 0 && tmp < arr[j]) {
+                    arr[j + r] = arr[j];
+                    j -= r;
+                }
+                arr[j + r] = tmp;
+            }
+            System.out.println(i + ":" + Arrays.toString(arr));
         }
     }
 

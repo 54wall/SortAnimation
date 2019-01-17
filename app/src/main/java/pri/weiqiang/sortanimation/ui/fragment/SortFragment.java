@@ -205,7 +205,7 @@ public class SortFragment extends Fragment {
 
             }
         });
-        algorithmSpinner.setSelection(Constant.ALGORITHM_PUBBLE, true);
+        algorithmSpinner.setSelection(Constant.ALGORITHM_HEER, true);
         mLlContainer = view.findViewById(R.id.ll_container);
         mRlContainerParent = view.findViewById(R.id.rl_container_parent);
         mLlContainerMerge = view.findViewById(R.id.ll_container_merge);
@@ -217,7 +217,7 @@ public class SortFragment extends Fragment {
         animationsCoordinator.addListener(new AlgorithmAnimationListener() {
             @Override
             public void onSwapStepAnimationEnd(int endedPosition) {
-                Log.e(TAG, "addListener AlgorithmAnimationListener:runAnimationIteration!!!!");
+//                Log.e(TAG, "addListener AlgorithmAnimationListener:runAnimationIteration!!!!");
                 runAnimationIteration();
             }
         });
@@ -225,7 +225,7 @@ public class SortFragment extends Fragment {
         mergeAnimationsCoordinator.addListener(new MergeAnimationListener() {
             @Override
             public void onSwapStepAnimationEnd(int endedPosition) {
-                Log.e(TAG, "addListener AlgorithmAnimationListener:runAnimationIteration!!!!");
+//                Log.e(TAG, "addListener AlgorithmAnimationListener:runAnimationIteration!!!!");
                 runAnimationIterationMerge();
             }
         });
@@ -233,7 +233,7 @@ public class SortFragment extends Fragment {
     }
 
     private void runAnimationIteration() {
-        Log.e(TAG, "runAnimationIteration");
+//        Log.e(TAG, "runAnimationIteration");
         isAnimationRunning = true;
         if (animationList != null && animationList.size() == scenarioItemIndex) {
             animationsCoordinator.showFinish();
@@ -261,7 +261,7 @@ public class SortFragment extends Fragment {
     }
 
     private void runAnimationIterationMerge() {
-        Log.e(TAG, "runAnimationIterationMerge");
+//        Log.e(TAG, "runAnimationIterationMerge");
         isAnimationRunning = true;
         if (mergeAnimationList != null && mergeAnimationList.size() == scenarioItemIndex) {
             mergeAnimationsCoordinator.showFinish();

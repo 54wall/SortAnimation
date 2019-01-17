@@ -179,10 +179,55 @@ public class SortArrayList {
         }
     }
 
+    //正确 https://www.cnblogs.com/LeslieXia/p/5814571.html
+    public static void heerSortTrue(ArrayList<Integer> unsortedValues, ArrayList<AnimationScenarioItem> animationioList) {
+        System.out.println("希尔排序 new");
+        // i表示希尔排序中的第n/2+1个元素（或者n/4+1）
+        // j表示希尔排序中从0到n/2的元素（n/4）
+        // r表示希尔排序中n/2+1或者n/4+1的值
+        int i, j, r, tmp;
+        // 划组排序
+        for (r = unsortedValues.size() / 2; r >= 1; r = r / 2) {
+            for (i = r; i < unsortedValues.size(); i++) {
+                tmp = unsortedValues.get(i);
+                j = i - r;
+                // 一轮排序
+                boolean isSwaped = false;//判断是否出现交换位置的情形
+                while (j >= 0 && tmp < unsortedValues.get(j)) {
+                    unsortedValues.set(j + r, unsortedValues.get(j));
+                    animationioList.add(new AnimationScenarioItem(true, j, j + r, false));
+                    j -= r;
+                    Log.e(TAG, "199 j:" + j + ",r:" + r);
+                    isSwaped = true;
+                }
+                unsortedValues.set(j + r, tmp);
+                //while 循环中如果没有进行交换，则j=i-r,就是说明仅进行比较，未进行交换
+                if (!isSwaped) {
+                    animationioList.add(new AnimationScenarioItem(false, j, j + r, false));
+                }
+                Log.e(TAG, "204 j:" + j + ",r:" + r);
+            }
+
+        }
+    }
+
     // 希尔排序 https://blog.csdn.net/csdn_aiyang/article/details/73108606
+
+    /**
+     * 已经改正 这种写法需要判断奇偶性
+     *
+     * @param unsortedValues
+     * @param animationioList
+     */
+    @Deprecated
     public static void heerSort(ArrayList<Integer> unsortedValues, ArrayList<AnimationScenarioItem> animationioList) {
         Log.e(TAG, "希尔排序");
         int d = unsortedValues.size() / 2;
+        //判断是否为基数 a%2！=0
+        if ((unsortedValues.size() & 1) == 1) {
+            Log.e(TAG, "数组大小为奇数 间隔需要+1 否则循环将少一次 排序将错误");
+            d++;
+        }
         while (true) {
             for (int i = 0; i < d; i++) {
                 for (int j = i; j + d < unsortedValues.size(); j += d) {
@@ -198,11 +243,16 @@ public class SortArrayList {
                     }
                 }
             }
-            if (d == 1) {
+            if (d < 1) {
                 break;
             }
             d--;
         }
+        StringBuffer stringBuffer = new StringBuffer();
+        for (int i = 0; i < unsortedValues.size(); i++) {
+            stringBuffer.append(unsortedValues.get(i) + ",");
+        }
+        Log.e(TAG, "heerSort 排序后:" + stringBuffer);
     }
 
     /*
