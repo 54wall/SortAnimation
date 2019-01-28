@@ -1,7 +1,7 @@
 package pri.weiqiang.sortanimation.ui.activity;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 import pri.weiqiang.sortanimation.R;
 import pri.weiqiang.sortanimation.ui.fragment.SortFragment;

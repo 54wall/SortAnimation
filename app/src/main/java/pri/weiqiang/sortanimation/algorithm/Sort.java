@@ -27,8 +27,8 @@ public class Sort {
 //		pubbleSort(a4);
 //		InsertSort(a5);
         HeerSort(a7);
-        shellSort(a7);
-        sort(a7);
+//        shellSort(a7);
+//        sort(a7);
 //		HeapSort.sortHeap();
         //查找
 //		binarySearch(a8);
@@ -108,7 +108,7 @@ public class Sort {
                 }
             }
 
-            if (d < 1) {
+            if (d == 1) {
                 break;
             }
             d--;
@@ -118,6 +118,7 @@ public class Sort {
         }
 
     }
+
 
     //正确 https://www.cnblogs.com/LeslieXia/p/5814571.html
     public static void sort(int[] arr) {
