@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">SortAnimation</string>
     <string name="sort">排序</string>
+    <string name="code">代码</string>
     <string name="empty_field_warning">请输入数据分割符为","</string>
     <string name="sort_finish">排序完成</string>
 </resources>

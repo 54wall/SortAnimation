@@ -8,7 +8,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "pri.weiqiang.sortanimation"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -17,7 +17,7 @@ android {
     }
 
     //签名配置
-    signingConfigs {
+/*    signingConfigs {
         debug {
             keyAlias "android"
             keyPassword "android"
@@ -30,7 +30,24 @@ android {
             storeFile file("D:/IDE/MyKeystore/54wallKeystore.jks")
             storePassword "android"
         }
+    }*/
+
+    signingConfigs {
+
+        release {
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storeFile file('D:\\Develop\\keystore\\debug.keystore')
+            storePassword 'android'
+        }
+        debug {
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storeFile file('D:\\Develop\\keystore\\debug.keystore')
+            storePassword 'android'
+        }
     }
+
 
     buildTypes {
 
@@ -84,4 +101,5 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation "io.noties.markwon:core:4.2.0"
 }

@@ -1,5 +1,6 @@
 package pri.weiqiang.sortanimation.ui.fragment;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
@@ -29,6 +30,7 @@ import pri.weiqiang.sortanimation.animation.MergeAnimationListener;
 import pri.weiqiang.sortanimation.animation.MergeAnimationScenarioItem;
 import pri.weiqiang.sortanimation.animation.MergeAnimationsCoordinator;
 import pri.weiqiang.sortanimation.constant.Constant;
+import pri.weiqiang.sortanimation.ui.activity.CodeActivity;
 import pri.weiqiang.sortanimation.ui.customview.RectView;
 import pri.weiqiang.sortanimation.util.Util;
 
@@ -45,6 +47,7 @@ public class SortFragment extends Fragment {
     private String TAG = SortFragment.class.getSimpleName();
     private EditText mEtInput;
     private Button mBtnStart;
+    private Button mBtnCode;
     private boolean isAnimationRunning;
     private int scenarioItemIndex = 0;
     private LinearLayout mLlContainer;
@@ -167,6 +170,16 @@ public class SortFragment extends Fragment {
         Log.e(TAG, "onCreateView");
         view = inflater.inflate(R.layout.fragment_sort, container, false);
         mEtInput = view.findViewById(R.id.et_input);
+        mBtnCode = view.findViewById(R.id.btn_code);
+        mBtnCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(getActivity(), CodeActivity.class);
+                intent.putExtra(Constant.EXTRA_CODE,algorithmSelected);
+                getActivity().startActivity(intent);
+            }
+        });
         mBtnStart = view.findViewById(R.id.btn_start);
         mBtnStart.setOnClickListener(buttonClickListener);
         algorithmSpinner = view.findViewById(R.id.spinner_algorithm);

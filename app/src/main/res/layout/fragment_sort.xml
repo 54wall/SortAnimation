@@ -18,7 +18,7 @@
             android:id="@+id/et_input"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
+            android:layout_weight="2"
             android:digits="0123456789,"
             android:maxLines="3"
             android:text="3,2,5,4,1" />
@@ -38,6 +38,16 @@
             android:layout_marginLeft="12dp"
             android:layout_weight="1"
             android:text="@string/sort" />
+
+        <Button
+            android:id="@+id/btn_code"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_weight="1"
+            android:text="@string/code" />
 
 
     </LinearLayout>
@@ -82,5 +92,7 @@
             android:orientation="horizontal" />
 
     </LinearLayout>
+
+
 
 </LinearLayout>
